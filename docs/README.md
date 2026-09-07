@@ -8,6 +8,8 @@
 
 ## Legacy baseline (AS-IS)
 
+บันทึกที่มาและวิธีรักษาความต่อเนื่องอยู่ที่ [Project Memory](memory/README.md) พร้อม [บันทึกการคุยเริ่มต้น](memory/sessions/2026-09-08-project-foundation.md) และ [สถานะประวัติแชต](memory/transcripts/README.md)
+
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
 ## Target architecture (TO-BE)

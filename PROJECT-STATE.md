@@ -21,6 +21,9 @@
 
 ## Completed
 
+- จัดทำบันทึกการคุยพร้อมที่มา เหตุผล ข้อเสนอที่ยังไม่อนุมัติ และพื้นที่สำหรับประวัติแชต
+- Repository เชื่อมกับ GitHub แล้ว; checkpoint การสร้างเอกสารเดิมเป็นหลักฐานย้อนหลัง ไม่ใช่สถานะ Git ปัจจุบัน
+
 - สำรวจ flow หลักของ Jar Test ในระบบเดิม
 - ทดลองสร้างและปิดงาน Jar Test ด้วยข้อมูลทดสอบที่ `สถานีผลิต Head Office`
 - บันทึกหน้ารายการ ฟอร์ม modal แท็บ สารเคมี รอบทดสอบ 6 Jar ผลคุณภาพ สรุปผล และ responsive behavior
@@ -73,6 +76,8 @@
 ตัดสินขอบเขตความเป็นเจ้าของ Global Master ในระบบ multi-organization จากนั้นออกแบบ conceptual master-data model สำหรับ Jar Test โดยยังไม่ลง physical database schema จนกว่าข้อตกลงหลักจะครบ
 
 ## Handoff instructions
+
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md) และ [บันทึกการคุย](docs/memory/sessions/2026-09-08-project-foundation.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 
