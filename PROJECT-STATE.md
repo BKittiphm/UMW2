@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 8 กันยายน 2569
+อัปเดตล่าสุด: 9 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -32,7 +32,10 @@
 - จัดทำ legacy product and functional specification
 - ยืนยันโครงสร้าง Organization → Business Unit → Site
 - ยืนยันว่า Business Unit และ Site เป็นคนละระดับ
-- ยืนยันว่า Water Source เป็น Global Master และเชื่อมกับ Site แบบหลายต่อหลาย
+- ยืนยันว่า `wq_source` เป็นประเภทน้ำ ไม่ใช่รายการแหล่งน้ำจริง
+- ยืนยันว่ารายการน้ำแยกเป็นตาราง `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
+- ยืนยันว่าแต่ละรายการในตารางประเภทมี `wq_source_id` เชื่อมกลับตารางประเภท
+- ยืนยันว่า Jar Test ใช้เฉพาะน้ำดิบและเลือก `water_source` จาก `raw_unit`
 
 ## Accepted decisions
 
@@ -40,10 +43,13 @@
 2. `กิจการประปา` ใช้ชื่อ canonical ว่า Business Unit
 3. `สถานี` ใช้ชื่อ canonical ว่า Site และอยู่ภายใต้ Business Unit
 4. ตัดคำว่า `ผลิต` ออกจากชื่อ canonical ของ Site
-5. Water Source เป็น Global Master
-6. Site หนึ่งใช้หลาย Water Source ได้ และ Water Source หนึ่งใช้ร่วมกันหลาย Site ได้
-7. Jar Test ต้องเลือก Water Source ที่ได้รับการผูกไว้กับ Site ที่เลือก
-8. Legacy behavior กับ upgrade requirements ต้องอยู่คนละเอกสารและห้ามปะปนกัน
+5. `wq_source` เป็นตัวเลือกประเภทน้ำ เมื่อเลือกแล้วระบบแสดงรายการจากตารางของประเภทนั้น
+6. แหล่งน้ำแต่ละประเภทเก็บในตารางแยกกันตามชื่อ
+7. ตารางประเภทแต่ละตารางเชื่อมกลับ `wq_source` ด้วย `wq_source_id`
+8. Jar Test ใช้เฉพาะน้ำดิบและเชื่อม `water_source` ไปยังรายการใน `raw_unit`
+9. Legacy behavior กับ upgrade requirements ต้องอยู่คนละเอกสารและห้ามปะปนกัน
+
+ความเข้าใจเดิมที่ให้ Water Source จริงเชื่อม Site โดยตรงแบบ many-to-many ถูกแทนที่สำหรับ Jar Test แล้ว ความสัมพันธ์ที่รองรับการใช้ `raw_unit` รายการเดียวร่วมกันหลาย Site ยังต้องกำหนดเพิ่ม
 
 รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md`
 
@@ -59,25 +65,27 @@
 
 เรียงตามลำดับที่ควรตัดสิน:
 
-1. Global Master จะเป็น global ข้ามทุก Organization หรือ tenant-scoped ภายใน Organization
-2. Water Source เดียวสามารถใช้ข้ามหลาย Business Unit ได้หรือจำกัดภายใน Business Unit เดียว
-3. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
-4. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
-5. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
-6. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
-7. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
-8. Technology stack และ deployment target
-9. Physical database schema, audit/history และ migration strategy
+1. `raw_unit` รายการเดียวที่ใช้ร่วมกันหลาย Site จะเชื่อมผ่านตารางกลาง หรือใช้โครงสร้างอื่น
+2. `wq_source` เป็นประเภทกลางร่วมกันหรือเป็นรายการประเภทแยกภายใต้แต่ละ Site
+3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
+4. Global Master จะเป็น global ข้ามทุก Organization หรือ tenant-scoped ภายใน Organization
+5. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
+6. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
+7. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
+8. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
+9. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
+10. Technology stack และ deployment target
+11. Physical database schema, audit/history และ migration strategy
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
 ## Immediate next step
 
-ตัดสินขอบเขตความเป็นเจ้าของ Global Master ในระบบ multi-organization จากนั้นออกแบบ conceptual master-data model สำหรับ Jar Test โดยยังไม่ลง physical database schema จนกว่าข้อตกลงหลักจะครบ
+ยืนยันวิธีที่ `raw_unit` รายการเดียวถูกใช้ร่วมกันหลาย Site และความเป็นเจ้าของของ `wq_source` จากนั้นจึงปรับ conceptual model ต่อ โดยยังไม่ลง physical database schema
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md) และ [บันทึกการคุย](docs/memory/sessions/2026-09-08-project-foundation.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md) และ [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 

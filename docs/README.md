@@ -10,6 +10,8 @@
 
 บันทึกที่มาและวิธีรักษาความต่อเนื่องอยู่ที่ [Project Memory](memory/README.md) พร้อม [บันทึกการคุยเริ่มต้น](memory/sessions/2026-09-08-project-foundation.md) และ [สถานะประวัติแชต](memory/transcripts/README.md)
 
+คำชี้แจงล่าสุดเรื่อง `wq_source` และตารางประเภทน้ำอยู่ใน [บันทึกวันที่ 9 กันยายน](memory/sessions/2026-09-09-water-quality-source-structure.md)
+
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
 ## Target architecture (TO-BE)
@@ -23,6 +25,7 @@
 ## Active work records
 
 - [`aegis/work/2026-09-08-project-continuity/20-checkpoint.md`](aegis/work/2026-09-08-project-continuity/20-checkpoint.md) — checkpoint ล่าสุดของการจัดทำชุดเอกสารส่งต่องาน
+- [`aegis/work/2026-09-09-water-source-clarification/20-checkpoint.md`](aegis/work/2026-09-09-water-source-clarification/20-checkpoint.md) — checkpoint คำชี้แจงโครงสร้างแหล่งน้ำล่าสุด
 
 ## Document ownership
 

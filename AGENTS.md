@@ -44,8 +44,10 @@
 - `Site` หมายถึง `สถานี`
 - ห้ามใช้ `กิจการประปา` และ `Site` เป็นสิ่งเดียวกัน
 - ในระบบใหม่ใช้คำว่า `สถานี` ไม่ใช้ `สถานีผลิต` เป็นชื่อ canonical
-- `Water Source` หมายถึง `แหล่งน้ำ` และเป็น Global Master
-- การใช้แหล่งน้ำของแต่ละ Site ต้องผ่านความสัมพันธ์ Site–Water Source
+- `wq_source` หมายถึงประเภทแหล่งน้ำที่ใช้เลือกว่าจะโหลดข้อมูลจากตารางประเภทใด ไม่ใช่รายการแหล่งน้ำจริง
+- รายการแหล่งน้ำแต่ละประเภทอยู่ในตารางแยก: `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
+- `water_source` ใน Jar Test หมายถึงรายการน้ำดิบจาก `raw_unit`
+- ห้ามใช้โมเดล Site–Water Source แบบ many-to-many เดิมเป็นข้อสรุปสำหรับ Jar Test; วิธีแชร์ `raw_unit` หลาย Site ยังเป็น Open Decision
 
 รายละเอียดและคำที่ยังคลุมเครืออยู่ใน `CONTEXT.md`
 
@@ -56,7 +58,7 @@
 - สูตรปริมาณสารละลายใช้หลัก `C1V1 = C2V2` ตามพฤติกรรมที่บันทึกไว้
 - ผลผ่าน/ไม่ผ่านคำนวณจาก Bound ไม่ให้ผู้ใช้เลือกเอง
 - ห้ามแต่งค่า Bound หรือสูตรแนะนำสารเคมีที่ยังไม่ทราบ
-- Water Source ที่เลือกใน Jar Test ต้องเป็นรายการที่ผูกกับ Site นั้น
+- Jar Test ใช้เฉพาะรายการจาก `raw_unit`; การคัดกรองตาม Site ต้องรอข้อสรุปวิธีแชร์ `raw_unit` ระหว่าง Site
 
 ## 6. Safety when inspecting the legacy application
 
