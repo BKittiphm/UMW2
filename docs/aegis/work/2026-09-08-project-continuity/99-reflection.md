@@ -23,6 +23,6 @@
 - Result: aligned
 - Scope: requirements and architecture documentation
 
-## Remaining boundary
+## Follow-up after Git onboarding
 
-การมีไฟล์ในเครื่องยังไม่ทำให้ย้ายเครื่องได้จริง ต้อง initialize Git, commit และ push ไปยัง repository ที่เจ้าของโครงการควบคุมก่อน
+ชุดเอกสารถูก initialize, commit และ push ไปยัง repository ที่เจ้าของโครงการควบคุมแล้ว การย้ายเครื่องทำได้จาก GitHub ส่วนประวัติแชตฉบับเต็มยังไม่มีใน repository

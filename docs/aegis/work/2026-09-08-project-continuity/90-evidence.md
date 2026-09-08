@@ -35,9 +35,17 @@
 
 ### Git portability
 
-- Result: not yet configured
-- Project root is not currently a Git repository
-- GitHub remote is not currently configured
+- Result: pass for current repository setup
+- Branch: `main`
+- Remote: `https://github.com/BKittiphm/UMW2`
+- Local HEAD and `origin/main`: `6a0669e00a74bc0540bb0a4ca919a50b40677e85`
+- Working tree: clean at the last verification
+
+### Follow-up state sync
+
+- The original evidence above described the state before Git onboarding.
+- This follow-up records that Git initialization, commit and push were completed afterward.
+- The next unresolved work is product/domain design, not repository setup.
 
 ## Evidence assessment
 
