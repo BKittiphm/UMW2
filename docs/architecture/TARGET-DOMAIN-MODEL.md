@@ -2,6 +2,12 @@
 
 สถานะ: Working architecture baseline — เฉพาะส่วนที่เจ้าของโครงการยืนยันแล้ว
 
+## Technology baseline
+
+- PostgreSQL เป็นฐานข้อมูลหลักและ source of truth ของ UMW2 สำหรับ Global Master, Jar Test และโมดูลในอนาคต
+- การตัดสินใจนี้ยังไม่กำหนด physical schema, backend framework, ORM, hosting หรือ deployment target
+- เหตุผลและผลกระทบอยู่ใน [ADR-0002](../decisions/ADR-0002-postgresql-as-primary-database.md)
+
 ## Purpose
 
 กำหนดขอบเขตและความสัมพันธ์ระดับแนวคิดของระบบ UMW2 รุ่นใหม่ เพื่อใช้เป็นฐานก่อนออกแบบ database schema และเพื่อไม่ให้ชื่อจาก UI ระบบเดิมกำหนดโครงสร้างข้อมูลใหม่โดยไม่ตั้งใจ
@@ -57,6 +63,7 @@ Organization
 ## Explicitly deferred
 
 - Physical table และ column names
+- PostgreSQL hosting, backend framework, ORM/query layer และ deployment target
 - Primary key strategy
 - วิธีเชื่อม `raw_unit` รายการเดียวให้หลาย Site ใช้งานร่วมกัน
 - `wq_source` เป็นประเภทกลางหรือรายการประเภทที่สร้างแยกต่อ Site

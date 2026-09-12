@@ -11,7 +11,7 @@
 3. [PROJECT-STATE.md](PROJECT-STATE.md) — สถานะล่าสุด สิ่งที่เสร็จแล้ว และงานถัดไป
 4. [Legacy Jar Test specification](JarTest/legacy-jar-test-product-functional-spec-th.md) — พฤติกรรม Jar Test ของระบบเดิม (AS-IS)
 5. [Target domain model](docs/architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนของระบบใหม่ (TO-BE)
-6. [Architecture decisions](docs/decisions/ADR-0001-organization-business-unit-site-water-source.md) — ข้อตกลงสถาปัตยกรรมที่อนุมัติแล้ว
+6. [Architecture decisions](docs/README.md#accepted-decisions) — ข้อตกลงสถาปัตยกรรมที่อนุมัติแล้ว
 
 สารบัญเอกสารทั้งหมดอยู่ที่ [docs/README.md](docs/README.md)
 
@@ -40,4 +40,4 @@ Git เก็บไฟล์และประวัติการแก้ไ�
 
 ## สถานะการพัฒนา
 
-ขณะนี้อยู่ในช่วงเก็บ requirement และออกแบบโดเมน ยังไม่มี application code หรือ database schema ที่อนุมัติแล้ว
+ขณะนี้อยู่ในช่วงเก็บ requirement และออกแบบโดเมน PostgreSQL ได้รับอนุมัติเป็นฐานข้อมูลหลักแล้ว แต่ยังไม่มี application code หรือ physical database schema ที่อนุมัติ

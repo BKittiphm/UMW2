@@ -21,6 +21,7 @@
 ## Accepted decisions
 
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
+- [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2
 
 ## Active work records
 
