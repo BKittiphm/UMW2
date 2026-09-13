@@ -37,6 +37,7 @@
 - ยืนยันว่าแต่ละรายการในตารางประเภทมี `wq_source_id` เชื่อมกลับตารางประเภท
 - ยืนยันว่า Jar Test ใช้เฉพาะน้ำดิบและเลือก `water_source` จาก `raw_unit`
 - เลือก PostgreSQL เป็นฐานข้อมูลหลักและ source of truth ของ UMW2 เพื่อรองรับ Jar Test, Global Master และโมดูลในอนาคต
+- ยืนยันแนวทางออกแบบฐานข้อมูลแบบค่อยเป็นค่อยไป: Excel ที่จะนำมาให้วิเคราะห์เป็น schema draft ตั้งต้น อาจยังไม่ครบทุกตาราง และสามารถเพิ่มตารางตามฟังก์ชันหรือโมดูลระหว่างพัฒนาได้
 
 ## Accepted decisions
 
@@ -77,17 +78,17 @@
 8. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
 9. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
 10. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
-11. Physical database schema, tenant isolation, audit/history และ migration strategy
+11. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
 ## Immediate next step
 
-ยืนยันวิธีที่ `raw_unit` รายการเดียวถูกใช้ร่วมกันหลาย Site และความเป็นเจ้าของของ `wq_source` จากนั้นกำหนด tenant isolation และปรับ conceptual model ต่อก่อนลง physical PostgreSQL schema
+รับไฟล์ Excel schema draft มาวิเคราะห์เทียบกับเอกสารปัจจุบัน จากนั้นยืนยันวิธีที่ `raw_unit` รายการเดียวถูกใช้ร่วมกันหลาย Site และความเป็นเจ้าของของ `wq_source` แล้วกำหนด tenant isolation ก่อนลง physical PostgreSQL schema แบบ iterative
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md) และ [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md) และ [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 

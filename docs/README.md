@@ -12,6 +12,8 @@
 
 คำชี้แจงล่าสุดเรื่อง `wq_source` และตารางประเภทน้ำอยู่ใน [บันทึกวันที่ 9 กันยายน](memory/sessions/2026-09-09-water-quality-source-structure.md)
 
+บันทึกล่าสุดเรื่องการนำ Excel มาเป็น schema draft และการออกแบบแบบ iterative อยู่ใน [บันทึกวันที่ 14 กันยายน](memory/sessions/2026-09-14-schema-draft-and-iterative-design.md)
+
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
 ## Target architecture (TO-BE)
