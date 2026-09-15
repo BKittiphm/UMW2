@@ -16,11 +16,14 @@ _Avoid_: ใช้แทน Site หรือสถานี
 _Avoid_: สถานีผลิต (สำหรับชื่อ canonical ของระบบใหม่), กิจการประปา
 
 **WQ Source (`wq_source`)**:
-ประเภทแหล่งน้ำที่ผู้ใช้เลือกเพื่อให้ระบบแสดงรายการจากตารางของประเภทนั้น `wq_source` ไม่ใช่รายการแหล่งน้ำจริง
+ประเภทแหล่งน้ำกลางคงที่ระดับระบบที่ผู้ใช้เลือกเพื่อให้ระบบแสดงรายการจากตารางของประเภทนั้น `wq_source` ไม่ใช่รายการแหล่งน้ำจริง
 _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` หรือตารางประเภทอื่น
 
 **Raw Unit (`raw_unit`)**:
-รายการแหล่งน้ำดิบจริงภายใต้ประเภทน้ำดิบ แต่ละรายการเชื่อมกลับไปยัง `wq_source` และเป็นแหล่งข้อมูลที่ Jar Test ใช้เลือก `water_source`
+รายการแหล่งน้ำดิบจริง เช่น แม่น้ำหรือสระ อยู่ภายใต้ประเภทน้ำดิบ เชื่อมกลับไปยัง `wq_source` ใช้ร่วมกันข้าม Organization และเป็นแหล่งข้อมูลที่ Jar Test ใช้เลือก `water_source`
+
+**Site–Unit Mapping**:
+ความสัมพันธ์ที่กำหนดว่ารายการจากตาราง unit ใดใช้ได้ที่ Site ใด สำหรับ `raw_unit` mapping ข้าม Organization ได้; สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` mapping ต้องอยู่ใน Organization เดียวกัน
 
 **Water Source ใน Jar Test**:
 ชื่อเชิงฟังก์ชันของรายการน้ำดิบที่เลือกจาก `raw_unit` ไม่ได้หมายถึงประเภท `wq_source` หรือรายการน้ำทุกประเภทในองค์กร
@@ -48,10 +51,12 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - หนึ่ง **Organization** มีหลาย **Business Unit**
 - หนึ่ง **Business Unit** อยู่ใน Organization เดียวและมีหลาย **Site**
 - หนึ่ง **Site** อยู่ใน Business Unit เดียว
-- ภายใต้ **Site** ผู้ใช้เลือก **WQ Source** เพื่อระบุประเภทน้ำ
+- **WQ Source** เป็นตารางกลางคงที่ที่ทุก Organization และ Site ใช้ร่วมกัน
 - **WQ Source** แต่ละประเภทแสดงรายการจากตารางแยก ได้แก่ `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` หรือ `filtration_unit`
 - แต่ละรายการในตารางประเภทเชื่อมกลับไปยัง **WQ Source** ด้วย `wq_source_id`
-- **Jar Test** ใช้เฉพาะประเภทน้ำดิบและเลือกรายการจริงจาก **Raw Unit**
+- หนึ่ง **Site** ใช้ **Raw Unit** ได้หลายรายการ และ **Raw Unit** หนึ่งรายการเชื่อมกับหลาย Site ได้ แม้อยู่คนละ Organization
+- **Potable Unit**, **Potable Transfer Unit**, **Sedimentation Unit** และ **Filtration Unit** ต้องเชื่อมกับ Site ผ่าน mapping ภายใน Organization เดียวกัน
+- **Jar Test** ใช้เฉพาะประเภทน้ำดิบและเลือกรายการ **Raw Unit** ที่มี mapping กับ Site ของงาน
 - หนึ่ง **Test Round** มี Jar จำนวน 6 ใบตาม legacy baseline
 
 ## Resolved Ambiguities
@@ -61,11 +66,13 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - คำ canonical ของระบบใหม่คือ `สถานี`; คำว่า `สถานีผลิต` คงไว้เฉพาะเมื่ออ้างข้อความจากระบบเดิม
 - `wq_source` เป็นประเภท ส่วนรายการแหล่งน้ำจริงอยู่ในตารางแยกตามประเภท
 - `water_source` ของ Jar Test คือรายการจาก `raw_unit` ไม่ใช่ `wq_source` และไม่รวมแหล่งน้ำประเภทอื่น
+- `wq_source` เป็นข้อมูลกลางคงที่ระดับระบบ
+- `raw_unit` ใช้ร่วมข้าม Organization ได้ผ่าน mapping กับ Site
+- Unit อีก 4 ประเภทไม่ใช้ร่วมข้าม Organization
 
 ## Open Ambiguities
 
-- Global Master แต่ละประเภทจะเป็นข้อมูลร่วมกันทุก Organization หรือแยกข้อมูลภายในแต่ละ Organization
-- รายการ `raw_unit` เดียวใช้ร่วมกันหลาย Site ด้วยความสัมพันธ์แบบใด
-- `wq_source` เป็นประเภทกลางร่วมกันหรือเป็นรายการประเภทที่สร้างแยกภายใต้แต่ละ Site
+- cardinality ที่แน่นอนและข้อมูลประกอบของ mapping สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
+- แต่ละ mapping ต้องระบุหน่วยจริง ชื่อเรียกเฉพาะ Site หรือลำดับหน่วยหรือไม่
 - ชื่อ `potable_tranfer_unit` ที่ปรากฏในแบบข้อมูลจะคงการสะกดเดิมหรือเปลี่ยนเป็น `potable_transfer_unit`
 - ตัวเลือกที่ระบบเดิมติดป้ายว่า `กิจการประปา` แท้จริงเป็น Business Unit, Site หรือค่าผสมของทั้งสองระดับ

@@ -47,7 +47,9 @@
 - `wq_source` หมายถึงประเภทแหล่งน้ำที่ใช้เลือกว่าจะโหลดข้อมูลจากตารางประเภทใด ไม่ใช่รายการแหล่งน้ำจริง
 - รายการแหล่งน้ำแต่ละประเภทอยู่ในตารางแยก: `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
 - `water_source` ใน Jar Test หมายถึงรายการน้ำดิบจาก `raw_unit`
-- ห้ามใช้โมเดล Site–Water Source แบบ many-to-many เดิมเป็นข้อสรุปสำหรับ Jar Test; วิธีแชร์ `raw_unit` หลาย Site ยังเป็น Open Decision
+- `wq_source` เป็นตารางประเภทกลางคงที่ระดับระบบ
+- `raw_unit` เป็นรายการแหล่งน้ำดิบกลางที่ใช้ร่วมข้าม Organization และต้องเชื่อมกับ Site ผ่าน mapping
+- `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้องเชื่อมกับ Site ผ่าน mapping ใน Organization เดียวกัน
 
 รายละเอียดและคำที่ยังคลุมเครืออยู่ใน `CONTEXT.md`
 
@@ -58,7 +60,7 @@
 - สูตรปริมาณสารละลายใช้หลัก `C1V1 = C2V2` ตามพฤติกรรมที่บันทึกไว้
 - ผลผ่าน/ไม่ผ่านคำนวณจาก Bound ไม่ให้ผู้ใช้เลือกเอง
 - ห้ามแต่งค่า Bound หรือสูตรแนะนำสารเคมีที่ยังไม่ทราบ
-- Jar Test ใช้เฉพาะรายการจาก `raw_unit`; การคัดกรองตาม Site ต้องรอข้อสรุปวิธีแชร์ `raw_unit` ระหว่าง Site
+- Jar Test ใช้เฉพาะรายการจาก `raw_unit` ที่มี mapping กับ Site ของงาน
 
 ## 6. Safety when inspecting the legacy application
 

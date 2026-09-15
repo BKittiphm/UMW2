@@ -1,7 +1,7 @@
 # ADR-0001: Organization, Business Unit, Site and Water-Quality Sources
 
-- Status: Accepted; amended 2026-09-09
-- Date: 2026-09-08; amended 2026-09-09
+- Status: Accepted; amended 2026-09-15
+- Date: 2026-09-08; amended 2026-09-09, 2026-09-15
 - Scope: Target domain model for UMW2
 
 ## Context
@@ -21,7 +21,10 @@
 7. รายการแหล่งน้ำแยกเก็บใน `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
 8. ตารางประเภทแต่ละตารางมี `wq_source_id` เชื่อมกลับ `wq_source`
 9. Jar Test ใช้เฉพาะประเภทน้ำดิบ และ `water_source` ใน Jar Test เชื่อมกับรายการจาก `raw_unit`
-10. วิธีรองรับ `raw_unit` รายการเดียวให้หลาย Site ใช้ร่วมกันยังไม่ถูกตัดสิน
+10. `wq_source` เป็นตารางประเภทกลางคงที่ระดับระบบ
+11. `raw_unit` เป็นรายการแหล่งน้ำดิบจริง เช่น แม่น้ำหรือสระ ใช้ร่วมข้าม Organization ได้
+12. Site และ `raw_unit` มีความสัมพันธ์แบบ many-to-many ผ่าน mapping; Jar Test เลือกได้เฉพาะ `raw_unit` ที่ mapping กับ Site ของงาน
+13. `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 
 ## Consequences
 
@@ -29,7 +32,8 @@
 - UI ทั่วไปเลือกประเภทน้ำเพื่อแสดงรายการจากตารางที่สอดคล้องกัน
 - UI ของ Jar Test จำกัดประเภทเป็นน้ำดิบและแสดงรายการจาก `raw_unit`
 - Query และสิทธิ์ต้องรู้ทั้ง Site, ประเภทน้ำ และรายการจริงตามบริบทของโมดูล
-- ห้ามนำความสัมพันธ์ Site–Water Source แบบ many-to-many ที่เคยเสนอไปสร้าง physical schema โดยยังไม่ตัดสินวิธีแชร์ `raw_unit`
+- Physical schema ต้องมี relationship record สำหรับ Site–Raw Unit และบังคับให้ Jar Test อ้างเฉพาะรายการที่ Site ใช้ได้
+- Physical schema ต้องป้องกัน mapping ของ unit ภายใน Organization ไปยัง Site ของคนละ Organization
 
 ## Alternatives considered
 
@@ -41,20 +45,20 @@
 
 ไม่เลือก เพราะเจ้าของโครงการยืนยันว่าเป็นคนละระดับ และหนึ่ง Business Unit มีหลาย Site
 
-### เชื่อม Site กับรายการ Water Source จริงโดยตรงแบบ many-to-many
+### ให้ unit ทุกประเภทใช้ร่วมข้าม Organization
 
-เคยถูกบันทึกเป็นความเข้าใจเบื้องต้น แต่ถูกแทนที่สำหรับ Jar Test หลังยืนยันว่า `wq_source` เป็นประเภทและรายการจริงอยู่ใน `raw_unit` วิธีแชร์รายการจริงหลาย Site ยังเป็นคำถามเปิด
+ไม่เลือก เพราะผู้ใช้ยืนยันว่าเฉพาะ `raw_unit` ใช้ร่วมข้าม Organization ได้ ส่วน unit อีก 4 ประเภทมีขอบเขตภายใน Organization
 
 ## Amendment history
 
 - 2026-09-08: บันทึก Organization, Business Unit, Site และความเข้าใจเบื้องต้นเรื่อง Water Source
 - 2026-09-09: แทนที่ส่วน Water Source โดยแยก `wq_source` ซึ่งเป็นประเภทออกจากตารางรายการจริง และกำหนดว่า Jar Test ใช้ `raw_unit`
+- 2026-09-15: กำหนดขอบเขต `wq_source` และ `raw_unit`, ยืนยัน Site–Raw Unit mapping และกำหนดขอบเขต Organization ของ unit ประเภทอื่น
 
 ## Unresolved follow-up decisions
 
-1. `raw_unit` รายการเดียวใช้ร่วมกันหลาย Site ผ่านความสัมพันธ์แบบใด
-2. `wq_source` เป็นประเภทกลางร่วมกันหรือเป็นรายการประเภทแยกต่อ Site
+1. cardinality และข้อมูลประกอบของ mapping สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
+2. ต้องแยกหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` ที่ชื่อหรือขนาดซ้ำกันด้วยข้อมูลใด
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
-4. Global Master เป็น global ข้าม Organization หรือ tenant-scoped
-5. ตารางประเภทต้องมี effective dates, active status หรือ Site-specific metadata หรือไม่
-6. Jar Test จะอ้าง `raw_unit` โดยตรงหรือผ่าน relationship record ที่รองรับหลาย Site
+4. ตารางประเภทและ mapping ต้องมี effective dates, active status หรือ Site-specific metadata หรือไม่
+5. Jar Test จะอ้าง `raw_unit` โดยตรงพร้อม constraint หรืออ้าง Site–Raw Unit relationship record โดยตรง

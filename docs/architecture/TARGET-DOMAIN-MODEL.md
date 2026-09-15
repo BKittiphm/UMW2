@@ -12,18 +12,22 @@
 
 กำหนดขอบเขตและความสัมพันธ์ระดับแนวคิดของระบบ UMW2 รุ่นใหม่ เพื่อใช้เป็นฐานก่อนออกแบบ database schema และเพื่อไม่ให้ชื่อจาก UI ระบบเดิมกำหนดโครงสร้างข้อมูลใหม่โดยไม่ตั้งใจ
 
-## Confirmed hierarchy and water-source structure
+## Confirmed hierarchy, scope and water-source structure
 
 ```text
+System-wide reference data
+  wq_source (fixed categories)
+  raw_unit (raw-water sources, such as rivers or ponds)
+
 Organization
   └─ Business Unit (กิจการประปา)
        └─ Site (สถานี)
-            └─ wq_source (ประเภทแหล่งน้ำ)
-                 ├─ raw_unit
-                 ├─ potable_unit
-                 ├─ potable_tranfer_unit
-                 ├─ sedimentation_unit
-                 └─ filtration_unit
+
+Site  * ─── *  raw_unit                 (cross-Organization mapping allowed)
+Site  ─── mapping ─── potable_unit       (same Organization only)
+Site  ─── mapping ─── potable_tranfer_unit (same Organization only)
+Site  ─── mapping ─── sedimentation_unit (same Organization only)
+Site  ─── mapping ─── filtration_unit    (same Organization only)
 ```
 
 | Entity | Meaning | Confirmed relationship |
@@ -31,18 +35,18 @@ Organization
 | Organization | ขอบเขตองค์กรระดับสูงสุด | มีหลาย Business Unit |
 | Business Unit | กิจการประปา | อยู่ใน Organization เดียวและมีหลาย Site |
 | Site | สถานี | อยู่ใน Business Unit เดียว |
-| `wq_source` | ตัวเลือกประเภทแหล่งน้ำ | เมื่อเลือกประเภท ระบบแสดงรายการจากตารางของประเภทนั้น |
-| `raw_unit` | รายการแหล่งน้ำดิบ | แต่ละรายการมี `wq_source_id` และเป็นแหล่งข้อมูลของ Jar Test |
-| `potable_unit` | รายการน้ำประปา | เป็นตารางแยกและมี `wq_source_id` |
-| `potable_tranfer_unit` | รายการจุดส่งจ่ายน้ำประปา | เป็นตารางแยกและมี `wq_source_id`; การสะกดชื่อถาวรยังต้องยืนยัน |
-| `sedimentation_unit` | รายการน้ำในส่วนตกตะกอน | เป็นตารางแยกและมี `wq_source_id` |
-| `filtration_unit` | รายการน้ำในส่วนกรอง | เป็นตารางแยกและมี `wq_source_id` |
+| `wq_source` | ตัวเลือกประเภทแหล่งน้ำคงที่ระดับระบบ | เมื่อเลือกประเภท ระบบแสดงรายการจากตารางของประเภทนั้น |
+| `raw_unit` | รายการแหล่งน้ำดิบจริง เช่น แม่น้ำหรือสระ | เป็นข้อมูลกลางข้าม Organization, มี `wq_source_id`, และเป็นแหล่งข้อมูลของ Jar Test |
+| `potable_unit` | รายการน้ำประปา | อยู่ภายใน Organization, มี `wq_source_id`, และ mapping กับ Site ใน Organization เดียวกัน |
+| `potable_tranfer_unit` | รายการจุดส่งจ่ายน้ำประปา | อยู่ภายใน Organization, มี `wq_source_id`, และ mapping กับ Site ใน Organization เดียวกัน; การสะกดชื่อถาวรยังต้องยืนยัน |
+| `sedimentation_unit` | รายการน้ำในส่วนตกตะกอน | อยู่ภายใน Organization, มี `wq_source_id`, และ mapping กับ Site ใน Organization เดียวกัน |
+| `filtration_unit` | รายการน้ำในส่วนกรอง | อยู่ภายใน Organization, มี `wq_source_id`, และ mapping กับ Site ใน Organization เดียวกัน |
 
 ## Jar Test context
 
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
-เส้นทางเชิงแนวคิดคือ `Site → wq_source ประเภทน้ำดิบ → raw_unit หลายรายการ → Jar Test เลือกหนึ่งรายการ` ส่วนวิธีทำให้ `raw_unit` รายการเดียวใช้ร่วมกันหลาย Site ยังต้องตัดสินใจก่อนออกแบบ physical schema
+เส้นทางเชิงแนวคิดคือ `Site → Site–Raw Unit mapping → raw_unit → Jar Test เลือกหนึ่งรายการ` โดย `raw_unit` หนึ่งรายการเชื่อมกับหลาย Site ได้แม้ Site อยู่คนละ Organization
 
 ## Invariants
 
@@ -50,9 +54,10 @@ Organization
 2. Site ต้องมี Business Unit เจ้าของเพียงหนึ่งแห่ง
 3. `wq_source` เป็นประเภท ไม่ใช่รายการแหล่งน้ำจริง
 4. แหล่งน้ำแต่ละประเภทเก็บในตารางแยกตามชื่อและเชื่อมกลับด้วย `wq_source_id`
-5. Jar Test เลือกเฉพาะรายการจาก `raw_unit`
+5. Jar Test เลือกเฉพาะรายการจาก `raw_unit` ที่มี mapping กับ Site ของงาน
 6. `water_source` ใน Jar Test ห้ามถูกตีความเป็นรายการจากน้ำทุกประเภท
 7. ชื่อ canonical ของ entity คือ Site/สถานี ไม่ใช่สถานีผลิต
+8. `raw_unit` เป็นข้อมูลกลางข้าม Organization แต่ unit อีก 4 ประเภทมีขอบเขตภายใน Organization
 
 ## Legacy compatibility boundary
 
@@ -65,11 +70,9 @@ Organization
 - Physical table และ column names
 - PostgreSQL hosting, backend framework, ORM/query layer และ deployment target
 - Primary key strategy
-- วิธีเชื่อม `raw_unit` รายการเดียวให้หลาย Site ใช้งานร่วมกัน
-- `wq_source` เป็นประเภทกลางหรือรายการประเภทที่สร้างแยกต่อ Site
 - คงชื่อ `potable_tranfer_unit` ตามแบบข้อมูลหรือแก้การสะกดเป็น `potable_transfer_unit`
-- Global Master เป็น shared ข้าม Organization หรือ tenant-scoped
-- effective dates, active/inactive และ metadata ของ `wq_source` กับตารางประเภท
+- cardinality, effective dates, active/inactive และ metadata ของ mapping สำหรับ unit ที่อยู่ภายใน Organization
+- การแยกหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` เมื่อชื่อหรือขนาดซ้ำกันในหลาย Site
 - authorization scope และ data visibility
 - snapshot/history strategy ของ Jar Test
 - migration จากระบบเดิม

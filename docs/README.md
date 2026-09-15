@@ -14,6 +14,8 @@
 
 บันทึกล่าสุดเรื่องการนำ Excel มาเป็น schema draft และการออกแบบแบบ iterative อยู่ใน [บันทึกวันที่ 14 กันยายน](memory/sessions/2026-09-14-schema-draft-and-iterative-design.md)
 
+ข้อสรุปล่าสุดเรื่องขอบเขตของ unit และ Site mapping อยู่ใน [บันทึกวันที่ 15 กันยายน](memory/sessions/2026-09-15-unit-scope-and-site-mapping.md)
+
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
 ## Target architecture (TO-BE)
@@ -29,6 +31,7 @@
 
 - [`aegis/work/2026-09-08-project-continuity/20-checkpoint.md`](aegis/work/2026-09-08-project-continuity/20-checkpoint.md) — checkpoint ล่าสุดของการจัดทำชุดเอกสารส่งต่องาน
 - [`aegis/work/2026-09-09-water-source-clarification/20-checkpoint.md`](aegis/work/2026-09-09-water-source-clarification/20-checkpoint.md) — checkpoint คำชี้แจงโครงสร้างแหล่งน้ำล่าสุด
+- [`aegis/work/2026-09-15-unit-scope-and-site-mapping/20-checkpoint.md`](aegis/work/2026-09-15-unit-scope-and-site-mapping/20-checkpoint.md) — checkpoint ขอบเขต unit และ Site mapping ล่าสุด
 
 ## Document ownership
 

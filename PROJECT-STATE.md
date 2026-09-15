@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 12 กันยายน 2569
+อัปเดตล่าสุด: 15 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -36,6 +36,9 @@
 - ยืนยันว่ารายการน้ำแยกเป็นตาราง `raw_unit`, `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
 - ยืนยันว่าแต่ละรายการในตารางประเภทมี `wq_source_id` เชื่อมกลับตารางประเภท
 - ยืนยันว่า Jar Test ใช้เฉพาะน้ำดิบและเลือก `water_source` จาก `raw_unit`
+- ยืนยันว่า `wq_source` เป็นตารางประเภทกลางคงที่ระดับระบบ
+- ยืนยันว่า `raw_unit` เป็นรายการแหล่งน้ำดิบจริง ใช้ร่วมข้าม Organization และเชื่อมกับ Site แบบ many-to-many ผ่าน mapping
+- ยืนยันว่า `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 - เลือก PostgreSQL เป็นฐานข้อมูลหลักและ source of truth ของ UMW2 เพื่อรองรับ Jar Test, Global Master และโมดูลในอนาคต
 - ยืนยันแนวทางออกแบบฐานข้อมูลแบบค่อยเป็นค่อยไป: Excel ที่จะนำมาให้วิเคราะห์เป็น schema draft ตั้งต้น อาจยังไม่ครบทุกตาราง และสามารถเพิ่มตารางตามฟังก์ชันหรือโมดูลระหว่างพัฒนาได้
 
@@ -51,8 +54,11 @@
 8. Jar Test ใช้เฉพาะน้ำดิบและเชื่อม `water_source` ไปยังรายการใน `raw_unit`
 9. Legacy behavior กับ upgrade requirements ต้องอยู่คนละเอกสารและห้ามปะปนกัน
 10. PostgreSQL เป็นฐานข้อมูลหลักและ source of truth สำหรับข้อมูลธุรกรรมและ Master Data ของ UMW2
+11. `wq_source` เป็นประเภทแหล่งน้ำกลางคงที่ระดับระบบ
+12. `raw_unit` เป็นข้อมูลกลางข้าม Organization และ Site–Raw Unit เป็นความสัมพันธ์แบบ many-to-many
+13. Unit อีก 4 ประเภทมีขอบเขตภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 
-ความเข้าใจเดิมที่ให้ Water Source จริงเชื่อม Site โดยตรงแบบ many-to-many ถูกแทนที่สำหรับ Jar Test แล้ว ความสัมพันธ์ที่รองรับการใช้ `raw_unit` รายการเดียวร่วมกันหลาย Site ยังต้องกำหนดเพิ่ม
+`water_source` ของ Jar Test ยังคงหมายถึง `raw_unit` เท่านั้น โดยต้องเป็นรายการที่ mapping กับ Site ของงาน
 
 รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md` และ `docs/decisions/ADR-0002-postgresql-as-primary-database.md`
 
@@ -68,27 +74,26 @@
 
 เรียงตามลำดับที่ควรตัดสิน:
 
-1. `raw_unit` รายการเดียวที่ใช้ร่วมกันหลาย Site จะเชื่อมผ่านตารางกลาง หรือใช้โครงสร้างอื่น
-2. `wq_source` เป็นประเภทกลางร่วมกันหรือเป็นรายการประเภทแยกภายใต้แต่ละ Site
+1. cardinality และข้อมูลประกอบของ mapping สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit`
+2. วิธีระบุหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` ที่ชื่อหรือขนาดซ้ำกันในหลาย Site
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
-4. Global Master จะเป็น global ข้ามทุก Organization หรือ tenant-scoped ภายใน Organization
-5. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
-6. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
-7. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
-8. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
-9. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
-10. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
-11. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
+4. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
+5. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
+6. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
+7. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
+8. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
+9. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
+10. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
 ## Immediate next step
 
-รับไฟล์ Excel schema draft มาวิเคราะห์เทียบกับเอกสารปัจจุบัน จากนั้นยืนยันวิธีที่ `raw_unit` รายการเดียวถูกใช้ร่วมกันหลาย Site และความเป็นเจ้าของของ `wq_source` แล้วกำหนด tenant isolation ก่อนลง physical PostgreSQL schema แบบ iterative
+รับไฟล์ Excel schema draft มาวิเคราะห์เทียบกับเอกสารปัจจุบัน จากนั้นยืนยัน cardinality และข้อมูลของ mapping สำหรับ unit ภายใน Organization ก่อนลง physical PostgreSQL schema แบบ iterative
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md) และ [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md) และ [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 
