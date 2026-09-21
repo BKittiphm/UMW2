@@ -27,6 +27,7 @@
 13. `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 14. DDL draft ของ `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` เป็นเจ้าของรายการโดยตรง; `raw_unit` ยังคงเป็น Global Master โดยไม่ใช้ `organization_id`
 15. `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางที่ไม่ซ้ำระดับ global; Site mapping เป็นผู้ระบุว่าชุดถังกรองใดมีช่องกรองหมายเลขใด
+16. `site_raw_units` เป็น Site–Raw Unit mapping ที่ไม่เก็บ `organization_id` ซ้ำ; รายละเอียดเฉพาะจุดใช้ `custom_name`, `capacity` และ `capacity_uom_id` และร่าง DDL ต้องแยก uniqueness ของ mapping ที่มี/ไม่มี `custom_name`
 
 ## Consequences
 
@@ -37,6 +38,7 @@
 - Physical schema ต้องมี relationship record สำหรับ Site–Raw Unit และบังคับให้ Jar Test อ้างเฉพาะรายการที่ Site ใช้ได้
 - Physical schema ต้องป้องกัน mapping ของ unit ภายใน Organization ไปยัง Site ของคนละ Organization
 - DDL ของ unit ที่เป็น Organization-scoped ต้องเก็บ owner scope ให้ตรวจสอบได้ และ constraint ระดับ Organization ต้องไม่ทำให้รายการของคนละ Organization ชนกัน
+- Site–Raw Unit mapping ต้องตรวจสอบสิทธิ์ผ่าน Site ซึ่งเป็นผู้สืบทอด Organization; ไม่เพิ่ม `organization_id` ซ้ำใน relationship record
 
 ## Alternatives considered
 
@@ -58,6 +60,7 @@
 - 2026-09-09: แทนที่ส่วน Water Source โดยแยก `wq_source` ซึ่งเป็นประเภทออกจากตารางรายการจริง และกำหนดว่า Jar Test ใช้ `raw_unit`
 - 2026-09-15: กำหนดขอบเขต `wq_source` และ `raw_unit`, ยืนยัน Site–Raw Unit mapping และกำหนดขอบเขต Organization ของ unit ประเภทอื่น
 - 2026-09-21: เจ้าของโครงการยืนยันให้ `potable_unit` และ `potable_transfer_unit` มี `organization_id` ใน DDL draft และยืนยันว่า `filtration_subunits.unit_no` เป็น Master number ระดับ global
+- 2026-09-21: ปรับร่าง `site_raw_units` ให้ไม่มี `organization_id`, ใช้ `capacity_uom_id`, FK actions และ partial unique indexes ตาม `custom_name`
 
 ## Unresolved follow-up decisions
 
@@ -66,3 +69,4 @@
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
 4. ตารางประเภทและ mapping ต้องมี effective dates, active status หรือ Site-specific metadata หรือไม่
 5. Jar Test จะอ้าง `raw_unit` โดยตรงพร้อม constraint หรืออ้าง Site–Raw Unit relationship record โดยตรง
+6. Physical DDL ของ `users` และ seed mapping จริงของ `site_raw_units` ยังไม่ถูกยืนยัน

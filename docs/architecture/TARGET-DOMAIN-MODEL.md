@@ -65,6 +65,14 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - DDL draft ของ `potable_unit` และ `potable_transfer_unit` ใช้ `organization_id` ระบุ Organization เจ้าของรายการโดยตรง และต้องใช้ร่วมกับ mapping ที่ผูกกับ Site ใน Organization เดียวกัน
 - การระบุ `organization_id` ในสองตารางนี้เป็นการยืนยันขอบเขตของ schema draft; tenant isolation ของทุก mapping, authorization และ physical schema ทั้งระบบยังต้องออกแบบให้ครบก่อนอนุมัติเป็น schema สุดท้าย
 
+### Site–Raw Unit mapping draft
+
+- `site_raw_units` เป็น relationship ระหว่าง Site กับ `raw_unit` กลาง จึงไม่เก็บ `organization_id` ซ้ำ; Organization อนุมานผ่าน Site
+- รายละเอียดเฉพาะจุดรับน้ำดิบอยู่ที่ `custom_name`, `capacity` และ `capacity_uom_id`
+- Draft DDL ใช้ `ON DELETE CASCADE` กับ Site, `ON DELETE RESTRICT` กับ Raw Unit และหน่วยวัด และ `ON DELETE SET NULL` กับผู้แก้ไขข้อมูล
+- กรณี `custom_name` เป็น NULL อนุญาต mapping ค่าเริ่มต้นได้หนึ่งรายการต่อ Site–Raw Unit; กรณีมีชื่อให้ชื่อไม่ซ้ำกันภายในคู่เดียวกัน
+- รายละเอียดนี้เป็น schema draft ใน Notion; physical schema สุดท้ายและ seed mapping จริงยังต้องยืนยันร่วมกับตาราง `users` และข้อมูล Site
+
 ## Legacy compatibility boundary
 
 ระบบเดิมใช้ป้าย `กิจการประปา` ในตำแหน่งที่ตัวเลือกตัวอย่างเป็น `สถานีผลิต Head Office` จึงมีความเป็นไปได้ว่าป้ายเดิมรวมความหมาย Business Unit และ Site ไว้ด้วยกัน

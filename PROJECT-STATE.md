@@ -38,6 +38,7 @@
 - ยืนยันว่า Jar Test ใช้เฉพาะน้ำดิบและเลือก `water_source` จาก `raw_unit`
 - ยืนยันว่า `wq_source` เป็นตารางประเภทกลางคงที่ระดับระบบ
 - ยืนยันว่า `raw_unit` เป็นรายการแหล่งน้ำดิบจริง ใช้ร่วมข้าม Organization และเชื่อมกับ Site แบบ many-to-many ผ่าน mapping
+- อัปเดต Notion draft ของ `site_raw_units` ให้เป็น Site–Raw Unit mapping ที่ไม่มี `organization_id`, ใช้ `capacity_uom_id`, FK actions และ partial unique indexes สำหรับ `custom_name`
 - ยืนยันว่า `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 - อัปเดต Notion DDL draft ให้ `potable_unit` และ `potable_transfer_unit` มี `organization_id`, `wq_source_id`, `updated_at` และ constraint ระดับ Organization ตาม Data Dictionary
 - ยืนยันว่า `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางและ `UNIQUE` ระดับ global; ตาราง Site ใช้ mapping ระบุชุดถังกรองและช่องกรองที่ติดตั้ง
@@ -61,6 +62,7 @@
 13. Unit อีก 4 ประเภทมีขอบเขตภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
 14. DDL draft ของ `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` เป็นเจ้าของรายการ; `raw_unit` ไม่ต้องมีคอลัมน์นี้
 15. `filtration_subunits.unit_no` เป็นเลข Master กลางที่ไม่ซ้ำระดับ global ไม่ใช่หมายเลขที่สร้างใหม่แยกต่อ Site
+16. `site_raw_units` เป็น mapping ระหว่าง Site กับ `raw_unit` กลางโดยไม่เก็บ `organization_id` ซ้ำ; ความจุใช้ `capacity` กับ `capacity_uom_id` และต้องแยก uniqueness ระหว่าง mapping ที่มี/ไม่มี `custom_name`
 
 `water_source` ของ Jar Test ยังคงหมายถึง `raw_unit` เท่านั้น โดยต้องเป็นรายการที่ mapping กับ Site ของงาน
 
@@ -88,6 +90,7 @@
 8. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
 9. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
 10. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
+11. Physical DDL ของ `users` และการยืนยัน seed mapping จริงของ `site_raw_units`
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
@@ -97,7 +100,7 @@
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md) และ [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md) และ [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 

@@ -25,6 +25,8 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 **Site–Unit Mapping**:
 ความสัมพันธ์ที่กำหนดว่ารายการจากตาราง unit ใดใช้ได้ที่ Site ใด สำหรับ `raw_unit` mapping ข้าม Organization ได้; สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` mapping ต้องอยู่ใน Organization เดียวกัน ปัจจุบัน DDL draft ของ `potable_unit` และ `potable_transfer_unit` ระบุ `organization_id` เป็นเจ้าของรายการโดยตรง
 
+`site_raw_units` เป็น mapping ระหว่าง Site กับ `raw_unit` กลาง จึงไม่เก็บ `organization_id` ซ้ำในแถว mapping; ขอบเขต Organization อนุมานผ่าน `site → business_unit → organization` ส่วนรายละเอียดเฉพาะจุดอยู่ที่ `custom_name`, `capacity` และ `capacity_uom_id`
+
 **Water Source ใน Jar Test**:
 ชื่อเชิงฟังก์ชันของรายการน้ำดิบที่เลือกจาก `raw_unit` ไม่ได้หมายถึงประเภท `wq_source` หรือรายการน้ำทุกประเภทในองค์กร
 
@@ -69,6 +71,7 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - `water_source` ของ Jar Test คือรายการจาก `raw_unit` ไม่ใช่ `wq_source` และไม่รวมแหล่งน้ำประเภทอื่น
 - `wq_source` เป็นข้อมูลกลางคงที่ระดับระบบ
 - `raw_unit` ใช้ร่วมข้าม Organization ได้ผ่าน mapping กับ Site
+- `site_raw_units` เป็น mapping ของ Site–Raw Unit ที่ไม่ต้องมี `organization_id`; ร่าง DDL ใช้ `capacity_uom_id`, FK ไป `users(id)` สำหรับ audit และแยก unique กรณี `custom_name` เป็น NULL/ไม่เป็น NULL
 - Unit อีก 4 ประเภทไม่ใช้ร่วมข้าม Organization
 - `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` ใน DDL draft เพื่อระบุ Organization เจ้าของรายการ
 - `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลาง จึงไม่ซ้ำระดับ global; ความสัมพันธ์กับ Site อยู่ที่ `site_filtration_subunits`
