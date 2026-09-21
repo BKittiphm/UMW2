@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 15 กันยายน 2569
+อัปเดตล่าสุด: 21 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -39,6 +39,8 @@
 - ยืนยันว่า `wq_source` เป็นตารางประเภทกลางคงที่ระดับระบบ
 - ยืนยันว่า `raw_unit` เป็นรายการแหล่งน้ำดิบจริง ใช้ร่วมข้าม Organization และเชื่อมกับ Site แบบ many-to-many ผ่าน mapping
 - ยืนยันว่า `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
+- อัปเดต Notion DDL draft ให้ `potable_unit` และ `potable_transfer_unit` มี `organization_id`, `wq_source_id`, `updated_at` และ constraint ระดับ Organization ตาม Data Dictionary
+- ยืนยันว่า `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางและ `UNIQUE` ระดับ global; ตาราง Site ใช้ mapping ระบุชุดถังกรองและช่องกรองที่ติดตั้ง
 - เลือก PostgreSQL เป็นฐานข้อมูลหลักและ source of truth ของ UMW2 เพื่อรองรับ Jar Test, Global Master และโมดูลในอนาคต
 - ยืนยันแนวทางออกแบบฐานข้อมูลแบบค่อยเป็นค่อยไป: Excel ที่จะนำมาให้วิเคราะห์เป็น schema draft ตั้งต้น อาจยังไม่ครบทุกตาราง และสามารถเพิ่มตารางตามฟังก์ชันหรือโมดูลระหว่างพัฒนาได้
 
@@ -57,6 +59,8 @@
 11. `wq_source` เป็นประเภทแหล่งน้ำกลางคงที่ระดับระบบ
 12. `raw_unit` เป็นข้อมูลกลางข้าม Organization และ Site–Raw Unit เป็นความสัมพันธ์แบบ many-to-many
 13. Unit อีก 4 ประเภทมีขอบเขตภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
+14. DDL draft ของ `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` เป็นเจ้าของรายการ; `raw_unit` ไม่ต้องมีคอลัมน์นี้
+15. `filtration_subunits.unit_no` เป็นเลข Master กลางที่ไม่ซ้ำระดับ global ไม่ใช่หมายเลขที่สร้างใหม่แยกต่อ Site
 
 `water_source` ของ Jar Test ยังคงหมายถึง `raw_unit` เท่านั้น โดยต้องเป็นรายการที่ mapping กับ Site ของงาน
 
@@ -93,7 +97,7 @@
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md) และ [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md) และ [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 

@@ -23,7 +23,7 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 รายการแหล่งน้ำดิบจริง เช่น แม่น้ำหรือสระ อยู่ภายใต้ประเภทน้ำดิบ เชื่อมกลับไปยัง `wq_source` ใช้ร่วมกันข้าม Organization และเป็นแหล่งข้อมูลที่ Jar Test ใช้เลือก `water_source`
 
 **Site–Unit Mapping**:
-ความสัมพันธ์ที่กำหนดว่ารายการจากตาราง unit ใดใช้ได้ที่ Site ใด สำหรับ `raw_unit` mapping ข้าม Organization ได้; สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` mapping ต้องอยู่ใน Organization เดียวกัน
+ความสัมพันธ์ที่กำหนดว่ารายการจากตาราง unit ใดใช้ได้ที่ Site ใด สำหรับ `raw_unit` mapping ข้าม Organization ได้; สำหรับ `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` mapping ต้องอยู่ใน Organization เดียวกัน ปัจจุบัน DDL draft ของ `potable_unit` และ `potable_transfer_unit` ระบุ `organization_id` เป็นเจ้าของรายการโดยตรง
 
 **Water Source ใน Jar Test**:
 ชื่อเชิงฟังก์ชันของรายการน้ำดิบที่เลือกจาก `raw_unit` ไม่ได้หมายถึงประเภท `wq_source` หรือรายการน้ำทุกประเภทในองค์กร
@@ -56,6 +56,7 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - แต่ละรายการในตารางประเภทเชื่อมกลับไปยัง **WQ Source** ด้วย `wq_source_id`
 - หนึ่ง **Site** ใช้ **Raw Unit** ได้หลายรายการ และ **Raw Unit** หนึ่งรายการเชื่อมกับหลาย Site ได้ แม้อยู่คนละ Organization
 - **Potable Unit**, **Potable Transfer Unit**, **Sedimentation Unit** และ **Filtration Unit** ต้องเชื่อมกับ Site ผ่าน mapping ภายใน Organization เดียวกัน
+- DDL draft ของ **Potable Unit** และ **Potable Transfer Unit** ต้องมี `organization_id`; `raw_unit` ยังคงเป็น Global Master และไม่ใช้ `organization_id`
 - **Jar Test** ใช้เฉพาะประเภทน้ำดิบและเลือกรายการ **Raw Unit** ที่มี mapping กับ Site ของงาน
 - หนึ่ง **Test Round** มี Jar จำนวน 6 ใบตาม legacy baseline
 
@@ -69,6 +70,8 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - `wq_source` เป็นข้อมูลกลางคงที่ระดับระบบ
 - `raw_unit` ใช้ร่วมข้าม Organization ได้ผ่าน mapping กับ Site
 - Unit อีก 4 ประเภทไม่ใช้ร่วมข้าม Organization
+- `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` ใน DDL draft เพื่อระบุ Organization เจ้าของรายการ
+- `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลาง จึงไม่ซ้ำระดับ global; ความสัมพันธ์กับ Site อยู่ที่ `site_filtration_subunits`
 
 ## Open Ambiguities
 

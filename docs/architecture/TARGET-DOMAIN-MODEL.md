@@ -58,6 +58,12 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 6. `water_source` ใน Jar Test ห้ามถูกตีความเป็นรายการจากน้ำทุกประเภท
 7. ชื่อ canonical ของ entity คือ Site/สถานี ไม่ใช่สถานีผลิต
 8. `raw_unit` เป็นข้อมูลกลางข้าม Organization แต่ unit อีก 4 ประเภทมีขอบเขตภายใน Organization
+9. `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางที่ไม่ซ้ำระดับ global; การติดตั้งจริงของแต่ละ Site ระบุผ่าน `site_filtration_subunits`
+
+## Current schema-draft clarification
+
+- DDL draft ของ `potable_unit` และ `potable_transfer_unit` ใช้ `organization_id` ระบุ Organization เจ้าของรายการโดยตรง และต้องใช้ร่วมกับ mapping ที่ผูกกับ Site ใน Organization เดียวกัน
+- การระบุ `organization_id` ในสองตารางนี้เป็นการยืนยันขอบเขตของ schema draft; tenant isolation ของทุก mapping, authorization และ physical schema ทั้งระบบยังต้องออกแบบให้ครบก่อนอนุมัติเป็น schema สุดท้าย
 
 ## Legacy compatibility boundary
 

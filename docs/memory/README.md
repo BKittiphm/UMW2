@@ -10,8 +10,9 @@
 4. อ่าน [การเลือก PostgreSQL](sessions/2026-09-12-postgresql-decision.md) สำหรับฐานข้อมูลหลักของระบบ
 5. อ่าน [แนวทาง schema แบบ iterative](sessions/2026-09-14-schema-draft-and-iterative-design.md) สำหรับสถานะล่าสุดของการนำ Excel มาเป็นร่าง schema
 6. อ่าน [ขอบเขต unit และ Site mapping](sessions/2026-09-15-unit-scope-and-site-mapping.md) สำหรับข้อสรุปล่าสุดของ `raw_unit` และ unit ประเภทอื่น
-7. อ่านเอกสารเจ้าของ requirement, ศัพท์กลาง และ architecture ที่บันทึกอ้างถึง
-8. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
+7. อ่าน [การเพิ่ม organization_id ใน unit เฉพาะ Organization](sessions/2026-09-21-organization-scoped-unit-ddl.md) สำหรับการอัปเดต DDL ล่าสุดและความหมายของ `filtration_subunits.unit_no`
+8. อ่านเอกสารเจ้าของ requirement, ศัพท์กลาง และ architecture ที่บันทึกอ้างถึง
+9. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 

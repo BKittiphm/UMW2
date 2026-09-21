@@ -25,6 +25,8 @@
 11. `raw_unit` เป็นรายการแหล่งน้ำดิบจริง เช่น แม่น้ำหรือสระ ใช้ร่วมข้าม Organization ได้
 12. Site และ `raw_unit` มีความสัมพันธ์แบบ many-to-many ผ่าน mapping; Jar Test เลือกได้เฉพาะ `raw_unit` ที่ mapping กับ Site ของงาน
 13. `potable_unit`, `potable_tranfer_unit`, `sedimentation_unit` และ `filtration_unit` อยู่ภายใน Organization และต้อง mapping กับ Site ใน Organization เดียวกัน
+14. DDL draft ของ `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` เป็นเจ้าของรายการโดยตรง; `raw_unit` ยังคงเป็น Global Master โดยไม่ใช้ `organization_id`
+15. `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางที่ไม่ซ้ำระดับ global; Site mapping เป็นผู้ระบุว่าชุดถังกรองใดมีช่องกรองหมายเลขใด
 
 ## Consequences
 
@@ -34,6 +36,7 @@
 - Query และสิทธิ์ต้องรู้ทั้ง Site, ประเภทน้ำ และรายการจริงตามบริบทของโมดูล
 - Physical schema ต้องมี relationship record สำหรับ Site–Raw Unit และบังคับให้ Jar Test อ้างเฉพาะรายการที่ Site ใช้ได้
 - Physical schema ต้องป้องกัน mapping ของ unit ภายใน Organization ไปยัง Site ของคนละ Organization
+- DDL ของ unit ที่เป็น Organization-scoped ต้องเก็บ owner scope ให้ตรวจสอบได้ และ constraint ระดับ Organization ต้องไม่ทำให้รายการของคนละ Organization ชนกัน
 
 ## Alternatives considered
 
@@ -54,6 +57,7 @@
 - 2026-09-08: บันทึก Organization, Business Unit, Site และความเข้าใจเบื้องต้นเรื่อง Water Source
 - 2026-09-09: แทนที่ส่วน Water Source โดยแยก `wq_source` ซึ่งเป็นประเภทออกจากตารางรายการจริง และกำหนดว่า Jar Test ใช้ `raw_unit`
 - 2026-09-15: กำหนดขอบเขต `wq_source` และ `raw_unit`, ยืนยัน Site–Raw Unit mapping และกำหนดขอบเขต Organization ของ unit ประเภทอื่น
+- 2026-09-21: เจ้าของโครงการยืนยันให้ `potable_unit` และ `potable_transfer_unit` มี `organization_id` ใน DDL draft และยืนยันว่า `filtration_subunits.unit_no` เป็น Master number ระดับ global
 
 ## Unresolved follow-up decisions
 

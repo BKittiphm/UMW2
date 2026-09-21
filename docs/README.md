@@ -16,6 +16,8 @@
 
 ข้อสรุปล่าสุดเรื่องขอบเขตของ unit และ Site mapping อยู่ใน [บันทึกวันที่ 15 กันยายน](memory/sessions/2026-09-15-unit-scope-and-site-mapping.md)
 
+การอัปเดต DDL ล่าสุดของ unit เฉพาะ Organization และความหมายของ `filtration_subunits.unit_no` อยู่ใน [บันทึกวันที่ 21 กันยายน](memory/sessions/2026-09-21-organization-scoped-unit-ddl.md)
+
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
 ## Target architecture (TO-BE)
