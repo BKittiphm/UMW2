@@ -44,6 +44,16 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 ## Jar Test context
 
+### Site-scoped Jar Test settings (approved TO-BE)
+
+- แต่ละ Site มี Jar Test Setting ของตนเอง ไม่ใช้ค่าตั้งชุดเดียวทั่วระบบ
+- Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ใช้และราคา
+- ค่าตั้งของ Site ใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; Jar Test ยังคงเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site ของงาน
+- งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ เพื่อไม่ให้การแก้ Setting ในอนาคตเปลี่ยนข้อมูลย้อนหลัง
+- เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านในขอบเขตที่อนุมัติ
+- หาก Site ยังไม่มีค่าตั้งที่จำเป็น ระบบต้องแจ้งว่าต้องตั้งค่าก่อนใช้งาน และห้ามเลือกใช้ค่าเริ่มต้นจาก MAMIS หรือ Site อื่นโดยเงียบ
+- ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม ไม่แก้หรือแทนที่ legacy baseline
+
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
 เส้นทางเชิงแนวคิดคือ `Site → Site–Raw Unit mapping → raw_unit → Jar Test เลือกหนึ่งรายการ` โดย `raw_unit` หนึ่งรายการเชื่อมกับหลาย Site ได้แม้ Site อยู่คนละ Organization
@@ -81,6 +91,11 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 ## Explicitly deferred
 
+- physical schema, lifecycle/versioning และ snapshot representation ของ Jar Test Site Settings
+- รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาที่แต่ละ Site จะตั้งค่า รวมถึง comparison semantics ของ Bound
+- permission และ audit ของผู้แก้ไข Site Settings
+- พฤติกรรมของ draft เมื่อ Site ยังไม่มีค่าตั้งครบ
+- การตั้งค่าเฉพาะ raw_unit ภายใน Site เป็นส่วนขยายที่ยังไม่อนุมัติ
 - Physical table และ column names
 - PostgreSQL hosting, backend framework, ORM/query layer และ deployment target
 - Primary key strategy
@@ -88,7 +103,6 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - cardinality, effective dates, active/inactive และ metadata ของ mapping สำหรับ unit ที่อยู่ภายใน Organization
 - การแยกหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` เมื่อชื่อหรือขนาดซ้ำกันในหลาย Site
 - authorization scope และ data visibility
-- snapshot/history strategy ของ Jar Test
 - migration จากระบบเดิม
 
 รายการ Deferred เป็น decision ที่ยังเปิดอยู่ ห้ามนำค่าคาดเดาไปทำเป็น constraint ถาวร

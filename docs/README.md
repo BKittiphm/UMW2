@@ -22,9 +22,13 @@
 
 ## Target architecture (TO-BE)
 
+See also the approved target requirement: [Jar Test Setting ราย Site](../JarTest/jar-test-site-settings-requirements-th.md).
+
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่
 
 ## Accepted decisions
+
+- [ADR-0003: Site-scoped Jar Test Settings](decisions/ADR-0003-site-scoped-jar-test-settings.md)
 
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
 - [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2
@@ -42,6 +46,7 @@
 | คำศัพท์และความหมาย | `CONTEXT.md` |
 | สถานะล่าสุดและ next step | `PROJECT-STATE.md` |
 | พฤติกรรม Jar Test เดิม | `JarTest/legacy-jar-test-product-functional-spec-th.md` |
+| ข้อกำหนด Jar Test รุ่นใหม่ (TO-BE) | `JarTest/jar-test-site-settings-requirements-th.md` |
 | โครงสร้างโดเมนระบบใหม่ | `docs/architecture/TARGET-DOMAIN-MODEL.md` |
 | เหตุผลของการตัดสินใจสถาปัตยกรรม | `docs/decisions/ADR-*.md` |
 | กติกาการทำงานของ AI | `AGENTS.md` |

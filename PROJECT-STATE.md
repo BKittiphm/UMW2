@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 21 กันยายน 2569
+อัปเดตล่าสุด: 23 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -43,6 +43,8 @@
 - อัปเดต Notion DDL draft ให้ `potable_unit` และ `potable_transfer_unit` มี `organization_id`, `wq_source_id`, `updated_at` และ constraint ระดับ Organization ตาม Data Dictionary
 - ยืนยันว่า `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลางและ `UNIQUE` ระดับ global; ตาราง Site ใช้ mapping ระบุชุดถังกรองและช่องกรองที่ติดตั้ง
 - เลือก PostgreSQL เป็นฐานข้อมูลหลักและ source of truth ของ UMW2 เพื่อรองรับ Jar Test, Global Master และโมดูลในอนาคต
+- เจ้าของโครงการอนุมัติ Jar Test Setting ราย Site: พารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และสารเคมี/ราคา; ใช้กับ raw_unit ที่ mapping กับ Site และเก็บ snapshot ต่อการทดสอบ
+- ยืนยันว่าเงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่รวมใน Site Setting และไม่ใช้คำนวณ dose หรือ pass/fail ตามข้อกำหนดปัจจุบัน
 - ยืนยันแนวทางออกแบบฐานข้อมูลแบบค่อยเป็นค่อยไป: Excel ที่จะนำมาให้วิเคราะห์เป็น schema draft ตั้งต้น อาจยังไม่ครบทุกตาราง และสามารถเพิ่มตารางตามฟังก์ชันหรือโมดูลระหว่างพัฒนาได้
 
 ## Accepted decisions
@@ -66,7 +68,12 @@
 
 `water_source` ของ Jar Test ยังคงหมายถึง `raw_unit` เท่านั้น โดยต้องเป็นรายการที่ mapping กับ Site ของงาน
 
-รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md` และ `docs/decisions/ADR-0002-postgresql-as-primary-database.md`
+รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md`, `docs/decisions/ADR-0002-postgresql-as-primary-database.md` และ `docs/decisions/ADR-0003-site-scoped-jar-test-settings.md`
+
+## Additional accepted decisions (2026-09-23)
+
+17. Jar Test Setting เป็น TO-BE ระดับ Site ครอบคลุมพารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และสารเคมี/ราคา; ใช้กับ raw_unit ที่ mapping กับ Site และงานเก็บ snapshot ค่าตั้งที่ใช้
+18. เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลรายงานการทดลอง ไม่รวมใน Site Setting และไม่ใช้คำนวณ dose หรือ pass/fail ตามขอบเขตที่อนุมัติ
 
 ## Canonical baseline
 
@@ -94,6 +101,12 @@
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
+## Site settings follow-up decisions
+
+1. รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาจริงสำหรับ Site Setting รวมถึง comparison semantics ของ Bound
+2. Physical schema, versioning, permission/audit และพฤติกรรม draft เมื่อ Site ยังตั้งค่าไม่ครบ
+3. ความจำเป็นของการตั้งค่าเฉพาะ raw_unit ภายใน Site; ขอบเขตที่อนุมัติปัจจุบันใช้ Site Setting ครอบคลุมทุก raw_unit ที่ mapping
+
 ## Immediate next step
 
 รับไฟล์ Excel schema draft มาวิเคราะห์เทียบกับเอกสารปัจจุบัน จากนั้นยืนยัน cardinality และข้อมูลของ mapping สำหรับ unit ภายใน Organization ก่อนลง physical PostgreSQL schema แบบ iterative
@@ -101,6 +114,8 @@
 ## Handoff instructions
 
 ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md) และ [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+
+อ่าน [Jar Test Setting รายสถานี](docs/memory/sessions/2026-09-23-jar-test-site-settings.md) และ [ข้อกำหนด TO-BE](JarTest/jar-test-site-settings-requirements-th.md) ก่อนออกแบบ schema หรือ workflow ที่เกี่ยวข้อง
 
 เมื่อเริ่มต่อจากเครื่องหรือ AI ตัวใหม่:
 

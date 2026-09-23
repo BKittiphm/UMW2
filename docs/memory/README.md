@@ -4,6 +4,8 @@
 
 ## เริ่มอ่าน
 
+หัวข้อใหม่ที่ได้รับอนุมัติ: [Jar Test Setting รายสถานี](sessions/2026-09-23-jar-test-site-settings.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test
