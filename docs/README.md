@@ -24,6 +24,8 @@
 
 See also the approved target requirement: [Jar Test Setting ราย Site](../JarTest/jar-test-site-settings-requirements-th.md).
 
+กติกา Bound ล่าสุดและผลของการแก้เกณฑ์ต่อสถานะ submit อยู่ใน [บันทึกวันที่ 24 กันยายน](memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md)
+
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่
 
 ## Accepted decisions

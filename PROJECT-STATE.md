@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 23 กันยายน 2569
+อัปเดตล่าสุด: 24 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -46,6 +46,8 @@
 - เจ้าของโครงการอนุมัติ Jar Test Setting ราย Site: พารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และสารเคมี/ราคา; ใช้กับ raw_unit ที่ mapping กับ Site และเก็บ snapshot ต่อการทดสอบ
 - ยืนยันว่าเงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่รวมใน Site Setting และไม่ใช้คำนวณ dose หรือ pass/fail ตามข้อกำหนดปัจจุบัน
 - ยืนยันแนวทางออกแบบฐานข้อมูลแบบค่อยเป็นค่อยไป: Excel ที่จะนำมาให้วิเคราะห์เป็น schema draft ตั้งต้น อาจยังไม่ครบทุกตาราง และสามารถเพิ่มตารางตามฟังก์ชันหรือโมดูลระหว่างพัฒนาได้
+- ยืนยันกติกา Bound ของ Jar Test Setting: หนึ่งเกณฑ์ต่อ Site + Parameter + Type, ค่าเท่าขอบถือว่าผ่าน, lower ที่ว่างคือ 0, upper ที่ว่างคือไม่มีเพดาน, ห้าม Bound ว่างทั้งคู่และห้ามค่าติดลบ
+- ยืนยัน lifecycle ของเกณฑ์: การแก้เกณฑ์คำนวณกับงานที่ยังไม่ submit ได้; งานที่ submit แล้วคง snapshot เดิม และต้องสร้าง Jar Test ใหม่เมื่อต้องการใช้เกณฑ์ใหม่
 
 ## Accepted decisions
 
@@ -74,6 +76,8 @@
 
 17. Jar Test Setting เป็น TO-BE ระดับ Site ครอบคลุมพารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และสารเคมี/ราคา; ใช้กับ raw_unit ที่ mapping กับ Site และงานเก็บ snapshot ค่าตั้งที่ใช้
 18. เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลรายงานการทดลอง ไม่รวมใน Site Setting และไม่ใช้คำนวณ dose หรือ pass/fail ตามขอบเขตที่อนุมัติ
+19. เกณฑ์ Bound มีรายการปัจจุบันเดียวต่อ Site, Parameter และ Parameter Type; เปรียบเทียบแบบ inclusive โดย lower `NULL` คือ 0 และ upper `NULL` คือไม่มีเพดาน ห้าม Bound ว่างทั้งคู่หรือเป็นค่าติดลบ
+20. เกณฑ์ใหม่มีผลกับงานที่ยังไม่ submit; งานที่ submit แล้วใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่เพื่อใช้เกณฑ์ใหม่
 
 ## Canonical baseline
 
@@ -93,7 +97,7 @@
 4. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
 5. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
 6. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
-7. ค่าและโครงสร้าง Bound รวมถึงช่วงเวลาที่มีผล
+7. ค่าจริงของ Bound ที่แต่ละ Site จะใช้
 8. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
 9. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
 10. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
@@ -103,8 +107,8 @@
 
 ## Site settings follow-up decisions
 
-1. รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาจริงสำหรับ Site Setting รวมถึง comparison semantics ของ Bound
-2. Physical schema, versioning, permission/audit และพฤติกรรม draft เมื่อ Site ยังตั้งค่าไม่ครบ
+1. รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาจริงสำหรับ Site Setting
+2. Physical schema, permission/audit และพฤติกรรม draft เมื่อ Site ยังตั้งค่าไม่ครบ
 3. ความจำเป็นของการตั้งค่าเฉพาะ raw_unit ภายใน Site; ขอบเขตที่อนุมัติปัจจุบันใช้ Site Setting ครอบคลุมทุก raw_unit ที่ mapping
 
 ## Immediate next step
@@ -113,7 +117,7 @@
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md) และ [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md), [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md) และ [กติกา Bound และ lifecycle ของ Jar Test](docs/memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 อ่าน [Jar Test Setting รายสถานี](docs/memory/sessions/2026-09-23-jar-test-site-settings.md) และ [ข้อกำหนด TO-BE](JarTest/jar-test-site-settings-requirements-th.md) ก่อนออกแบบ schema หรือ workflow ที่เกี่ยวข้อง
 

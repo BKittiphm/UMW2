@@ -50,6 +50,9 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ใช้และราคา
 - ค่าตั้งของ Site ใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; Jar Test ยังคงเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site ของงาน
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ เพื่อไม่ให้การแก้ Setting ในอนาคตเปลี่ยนข้อมูลย้อนหลัง
+- เกณฑ์ Bound มีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; แก้เกณฑ์โดยปรับรายการเดิม ไม่มีช่วงวันมีผลในขอบเขตปัจจุบัน
+- การประเมิน Bound ใช้ขอบเขตรวม (`lower <= measured <= upper` เมื่อมี upper); `lower_bound = NULL` หมายถึง 0, `upper_bound = NULL` หมายถึงไม่มีเพดานบน และห้าม Bound ว่างทั้งคู่
+- เกณฑ์ที่แก้ไขมีผลกับงานที่ยังไม่ submit; งานที่ submit แล้วคงใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่หากต้องการประเมินด้วยเกณฑ์ใหม่
 - เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านในขอบเขตที่อนุมัติ
 - หาก Site ยังไม่มีค่าตั้งที่จำเป็น ระบบต้องแจ้งว่าต้องตั้งค่าก่อนใช้งาน และห้ามเลือกใช้ค่าเริ่มต้นจาก MAMIS หรือ Site อื่นโดยเงียบ
 - ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม ไม่แก้หรือแทนที่ legacy baseline
@@ -91,8 +94,8 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 ## Explicitly deferred
 
-- physical schema, lifecycle/versioning และ snapshot representation ของ Jar Test Site Settings
-- รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาที่แต่ละ Site จะตั้งค่า รวมถึง comparison semantics ของ Bound
+- physical schema และ snapshot representation ของ Jar Test Site Settings
+- รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาที่แต่ละ Site จะตั้งค่า
 - permission และ audit ของผู้แก้ไข Site Settings
 - พฤติกรรมของ draft เมื่อ Site ยังไม่มีค่าตั้งครบ
 - การตั้งค่าเฉพาะ raw_unit ภายใน Site เป็นส่วนขยายที่ยังไม่อนุมัติ

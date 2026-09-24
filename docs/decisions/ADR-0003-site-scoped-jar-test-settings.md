@@ -19,14 +19,17 @@
 5. หาก Site ยังไม่มีค่าตั้งที่จำเป็น ระบบต้องแจ้งให้ตั้งค่าก่อนใช้งาน และห้ามยืมค่าตั้งของ Site อื่นหรือใช้ค่าตัวอย่างจาก MAMIS โดยปริยาย
 6. เงื่อนไขการกวนและตกตะกอนบันทึกเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านตามขอบเขตที่อนุมัติ
 7. ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม; legacy Jar Test baseline คงเดิม
+8. เกณฑ์ผลทดสอบมีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; เมื่อเปลี่ยนเกณฑ์ให้แก้รายการเดิมโดยไม่มี effective date หรือประวัติเวอร์ชันในตารางเกณฑ์
+9. Bound เปรียบเทียบแบบ inclusive; `lower_bound` ที่เป็น `NULL` ใช้ค่า 0, `upper_bound` ที่เป็น `NULL` หมายถึงไม่มีเพดานบน, ห้าม Bound ว่างทั้งคู่ และห้ามค่าติดลบ
+10. การแก้เกณฑ์มีผลกับงานที่ยังไม่ submit เท่านั้น; งานที่ submit แล้วคง snapshot เดิม และผู้ใช้ต้องสร้าง Jar Test ใหม่หากต้องการใช้เกณฑ์ใหม่
 
 ## Consequences
 
 - ต้องมีข้อกำหนดและ UI สำหรับ Site Setting ก่อนที่ Site จะเริ่มใช้งาน Jar Test โดยไม่มีค่าปริยายที่แต่งขึ้น
 - ผลผ่าน/ไม่ผ่านยังคำนวณจาก Bound โดยระบบ และสูตร dose ที่อนุมัติเดิมไม่เปลี่ยน
 - การเลือกแหล่งน้ำยังบังคับผ่าน Site-Raw Unit mapping; Setting ไม่ได้เปลี่ยน raw_unit ให้เป็นข้อมูลเฉพาะ Site
-- งานเดิมต้องไม่เปลี่ยนค่าที่ใช้เมื่อ Site Setting ถูกแก้ภายหลัง
-- การออกแบบ physical schema, versioning, permission และ audit ยังต้องทำแยกก่อน implementation
+- งานที่ submit แล้วต้องไม่เปลี่ยนค่าที่ใช้เมื่อ Site Setting ถูกแก้ภายหลัง; งานที่ยังไม่ submit คำนวณด้วยเกณฑ์ปัจจุบันได้
+- การออกแบบ physical schema, permission และ audit ยังต้องทำแยกก่อน implementation
 
 ## Alternatives considered
 
@@ -44,9 +47,9 @@
 
 ## Open follow-up decisions
 
-1. รายชื่อพารามิเตอร์ หน่วย Bound และ comparison semantics ที่แต่ละ Site ต้องใช้
+1. รายชื่อพารามิเตอร์และหน่วย Bound ที่แต่ละ Site ต้องใช้
 2. รายการสารเคมี หน่วยราคา และค่าราคาจริง
-3. Physical schema และวิธี snapshot/version ของ Site Setting
-4. Role, permission, audit และ effective dates ของการแก้ค่าตั้ง
+3. Physical schema และวิธี snapshot ของ Site Setting
+4. Role, permission และ audit ของการแก้ค่าตั้ง
 5. พฤติกรรม draft เมื่อยังตั้งค่าไม่ครบ
 6. โครงสร้างข้อมูลเงื่อนไขการกวนและตกตะกอนในแต่ละการทดลอง
