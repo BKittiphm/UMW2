@@ -14,7 +14,7 @@
 2. `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญาของสารประจำ Site รองรับหลาย Vendor หรือหลายราคาต่อสารชนิดเดียวกัน
 3. `jar_test_chemical_doses` เก็บรายการหยอดสารต่อบีกเกอร์ อ้างสัญญาที่เลือกและเก็บ snapshot ของราคา พร้อมข้อมูลสำหรับคำนวณ C1V1 = C2V2
 4. ค่า dose สรุปสุดท้ายต้องเก็บใน `jar_test_final_chemical_doses` แยกจาก dose รายบีกเกอร์ เพราะผู้ใช้ยืนยันค่า final ที่อาจต่างจากบีกเกอร์ที่เลือกได้
-5. Transaction Jar Test หลักมี 6 ตาราง: `jar_tests`, `jar_test_raw_water_results`, `jar_test_beakers`, `jar_test_chemical_doses`, `jar_test_results` และ `jar_test_final_chemical_doses`
+5. แบบร่าง Transaction Jar Test ปัจจุบันมี 9 ตาราง: 6 ตารางเดิม และเพิ่ม `jar_test_rounds`, `jar_test_mixing_conditions` และ `jar_test_selected_chemicals` สำหรับหลายรอบ สภาวะทดลอง และสารที่เลือกระดับงาน
 6. งานที่ submit แล้วต้องใช้ snapshot ของ Bound และราคาเดิม; การตัดสต๊อกจริง/ล็อตรับเข้าเป็นขอบเขตของโมดูล Inventory ในอนาคต
 
 ## สิ่งที่ทำจริง
@@ -28,5 +28,6 @@
 
 - schema จริงของล็อตรับเข้า/สต๊อกคงเหลือ/การตัดสต๊อก และวิธีคิดต้นทุนสต๊อก
 - กติกาว่า 1 บีกเกอร์ใช้ได้กี่สารต่อ `jar_chemical_type`
+- **อัปเดตภายหลัง:** กติกานี้ตัดสินแล้วว่าเลือกสารหนึ่งรายการต่อประเภทระดับงาน ดู [บันทึกการเลือกสาร](2026-09-25-jar-test-chemical-selection.md)
 - physical DDL, trigger หรือ backend validation ที่ยืนยันว่า contract ที่เลือกเป็นของ Site เดียวกับงาน
 - รายการสัญญา ผู้ขาย และราคาจริงของแต่ละ Site

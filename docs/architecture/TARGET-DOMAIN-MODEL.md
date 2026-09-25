@@ -8,6 +8,17 @@
 - การตัดสินใจนี้ยังไม่กำหนด physical schema, backend framework, ORM, hosting หรือ deployment target
 - เหตุผลและผลกระทบอยู่ใน [ADR-0002](../decisions/ADR-0002-postgresql-as-primary-database.md)
 
+## Identity and role baseline
+
+- `role_type` เป็น Global Master สำหรับบทบาทผู้ใช้ มี `code`, ชื่อสองภาษา, `scope_level`, คำอธิบาย และสถานะใช้งาน
+- `scope_level` ที่เตรียมไว้คือ `SYSTEM`, `ORGANIZATION`, `BUSINESS_UNIT` และ `SITE` เพื่อเป็นขอบเขตข้อมูลเบื้องต้น ไม่ใช่ permission รายเมนู
+- ค่าเริ่มต้นที่บันทึกไว้คือ `SUPER_ADMIN`, `ADMIN`, `OUTSOURCE`, `OPERATOR`, `SHIFT_LEADER`, `SUPERVISOR`, `MANAGER` และ `DIRECTOR`
+- `users` เก็บรหัสพนักงาน เบอร์โทร Organization/BU/Site บทบาท ชื่อเข้าใช้ และ `password_hash`; ไม่เก็บ plaintext password
+- `organization_id`, `business_unit_id` และ `site_id` ของ `users` เป็น nullable เพื่อรองรับบัญชีระดับระบบ/Organization; ถ้ามี Site ต้องอยู่ใต้ BU/Organization เดียวกัน และถ้ามี BU ต้องอยู่ใน Organization เดียวกัน
+- ในระยะแรก `site_id` ใช้เป็น Site หลัก/ค่าเริ่มต้นของผู้ใช้ หากผู้ใช้ต้องรับผิดชอบหลาย Site ให้เพิ่ม `user_sites` เป็น mapping แยก
+- permission รายเมนูและ mapping บทบาทกับ permission จะออกแบบเป็น `permissions`/`role_permissions` ในระยะถัดไป หลังรายการฟังก์ชันได้รับการยืนยัน
+- รายละเอียดนี้เป็น schema draft เพื่อให้ตาราง Jar Test อ้าง `users(id)` และยังไม่ใช่การอนุมัติ physical DDL, authentication provider หรือ policy ด้าน password ทั้งระบบ
+
 ## Purpose
 
 กำหนดขอบเขตและความสัมพันธ์ระดับแนวคิดของระบบ UMW2 รุ่นใหม่ เพื่อใช้เป็นฐานก่อนออกแบบ database schema และเพื่อไม่ให้ชื่อจาก UI ระบบเดิมกำหนดโครงสร้างข้อมูลใหม่โดยไม่ตั้งใจ
@@ -48,20 +59,24 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 - แต่ละ Site มี Jar Test Setting ของตนเอง ไม่ใช้ค่าตั้งชุดเดียวทั่วระบบ
 - Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ Site ใช้; ราคาและผู้ขายอยู่ในสัญญาจัดซื้อของสาร
+- Site ใหม่มี `site_jar_test_raw_properties` ตั้งต้น 9 แถวตามชุดที่อนุมัติ ผู้ดูแลเพิ่มพารามิเตอร์จาก Master หรือปิดรายการระดับ Site ได้
 - ค่าตั้งของ Site ใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; Jar Test ยังคงเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site ของงาน
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ เพื่อไม่ให้การแก้ Setting ในอนาคตเปลี่ยนข้อมูลย้อนหลัง
 - เกณฑ์ Bound มีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; แก้เกณฑ์โดยปรับรายการเดิม ไม่มีช่วงวันมีผลในขอบเขตปัจจุบัน
 - การประเมิน Bound ใช้ขอบเขตรวม (`lower <= measured <= upper` เมื่อมี upper); `lower_bound = NULL` หมายถึง 0, `upper_bound = NULL` หมายถึงไม่มีเพดานบน และห้าม Bound ว่างทั้งคู่
 - เกณฑ์ที่แก้ไขมีผลกับงานที่ยังไม่ submit; งานที่ submit แล้วคงใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่หากต้องการประเมินด้วยเกณฑ์ใหม่
 - เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านในขอบเขตที่อนุมัติ
-- หาก Site ยังไม่มีค่าตั้งที่จำเป็น ระบบต้องแจ้งว่าต้องตั้งค่าก่อนใช้งาน และห้ามเลือกใช้ค่าเริ่มต้นจาก MAMIS หรือ Site อื่นโดยเงียบ
+- หากค่าตั้งที่จำเป็นส่วนอื่นยังไม่ครบ ระบบต้องแจ้งให้ตั้งค่าก่อนใช้งาน ชุดพารามิเตอร์น้ำดิบ 9 รายการเป็นข้อยกเว้นที่ได้รับอนุมัติเป็นค่าเริ่มต้นแล้ว
 - ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม ไม่แก้หรือแทนที่ legacy baseline
 
 ### Jar Test transaction model (current draft)
 
-- `jar_tests` เป็นหัวงาน เก็บ Site, น้ำดิบ, สภาวะทดลอง, สถานะ submit และบีกเกอร์ที่เลือก
-- `jar_test_raw_water_results` เก็บค่าน้ำดิบของงาน
-- `jar_test_beakers` เก็บบีกเกอร์ 1–6 และต้นทุนรวมที่คำนวณจากรายการหยอดสาร
+- `jar_tests` เป็นหัวงาน เก็บ Site, `site_raw_unit_id` ที่เป็น mapping ของ Site เดียวกัน, `test_datetime`, สถานะ submit และบีกเกอร์ที่เลือก; ผลคุณภาพน้ำเกิดในวันทดสอบเดียวกันโดยไม่เก็บฟิลด์วัน/เวลาวัดแยกหรือ `operating_status_id`
+- `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping
+- `jar_test_selected_chemicals` เก็บสารที่เลือกหนึ่งรายการต่อ `jar_chemical_type` ระดับงาน ไม่ใช่ระดับรอบหรือระดับสัญญาผู้ขาย
+- `jar_test_rounds` เก็บรอบการทดลองหลายรอบในงานเดียว โดย `round_no` ไม่ซ้ำภายในงาน
+- `jar_test_beakers` เก็บบีกเกอร์ 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร
+- `jar_test_mixing_conditions` เก็บลำดับ ชื่อขั้น เวลาและ RPM ของการกวนหรือตกตะกอนแยกตามรอบ
 - `jar_test_chemical_doses` เก็บสารทดลองต่อบีกเกอร์ พร้อม snapshot ที่ใช้คำนวณ C1V1 = C2V2 และต้นทุน
 - `jar_test_results` เก็บผลคุณภาพต่อบีกเกอร์ พร้อม snapshot Bound เมื่อ submit
 - `jar_test_final_chemical_doses` เก็บค่า dose สรุปสุดท้ายต่อสาร ซึ่งอาจต่างจาก dose ของบีกเกอร์ที่เลือก
@@ -71,6 +86,8 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
 เส้นทางเชิงแนวคิดคือ `Site → Site–Raw Unit mapping → raw_unit → Jar Test เลือกหนึ่งรายการ` โดย `raw_unit` หนึ่งรายการเชื่อมกับหลาย Site ได้แม้ Site อยู่คนละ Organization
+
+การเลือกสารหนึ่งรายการต่อ `jar_chemical_type` ล็อกระดับงานด้วย `UNIQUE (jar_test_id, chemical_type_id)` ใน `jar_test_selected_chemicals` ซึ่งอ้าง `site_chemicals` ที่เปิดใช้ใน Site เดียวกับงานและมีบทบาทที่อนุญาตใน `chemical_type_mappings` รายการทดลองต่อบีกเกอร์และผลสรุปอ้างสารที่เลือกในงานเดียวกัน; สัญญาหลายฉบับของสารเดียวกันไม่ทำให้กลายเป็นสารหลายรายการ และแต่ละ dose เก็บราคาจากสัญญาที่ใช้จริง
 
 ## Invariants
 

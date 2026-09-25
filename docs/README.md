@@ -28,11 +28,22 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 
 ข้อสรุปเรื่องราคาตามสัญญาและชุด Transaction ของ Jar Test อยู่ใน [บันทึกวันที่ 25 กันยายน](memory/sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md)
 
+ข้อสรุปเรื่องหลายรอบและเงื่อนไขกวนผสมอยู่ใน [บันทึก Jar Test หลายรอบ](memory/sessions/2026-09-25-jar-test-multi-round-and-mixing.md)
+
+ข้อสรุปเรื่องหนึ่งสารต่อประเภทตลอดงานอยู่ใน [บันทึกการเลือกสาร](memory/sessions/2026-09-25-jar-test-chemical-selection.md)
+
+ข้อสรุปเรื่องพารามิเตอร์น้ำดิบตั้งต้น 9 รายการอยู่ใน [บันทึกค่าเริ่มต้นน้ำดิบ](memory/sessions/2026-09-25-jar-test-raw-water-defaults.md)
+
+ข้อสรุป schema พื้นฐานของบทบาทและผู้ใช้อยู่ใน [บันทึก Role Type และ Users](memory/sessions/2026-09-25-user-role-schema.md)
+
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่
 
 ## Accepted decisions
 
 - [ADR-0003: Site-scoped Jar Test Settings](decisions/ADR-0003-site-scoped-jar-test-settings.md)
+- [ADR-0004: Jar Test rounds and mixing conditions](decisions/ADR-0004-jar-test-rounds-and-mixing-conditions.md)
+- [ADR-0005: Jar Test chemical selection per job](decisions/ADR-0005-jar-test-chemical-selection-per-job.md)
+- [ADR-0006: User and role type schema baseline](decisions/ADR-0006-user-role-type-schema.md)
 
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
 - [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2

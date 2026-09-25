@@ -49,7 +49,11 @@
 - ยืนยันกติกา Bound ของ Jar Test Setting: หนึ่งเกณฑ์ต่อ Site + Parameter + Type, ค่าเท่าขอบถือว่าผ่าน, lower ที่ว่างคือ 0, upper ที่ว่างคือไม่มีเพดาน, ห้าม Bound ว่างทั้งคู่และห้ามค่าติดลบ
 - ยืนยัน lifecycle ของเกณฑ์: การแก้เกณฑ์คำนวณกับงานที่ยังไม่ submit ได้; งานที่ submit แล้วคง snapshot เดิม และต้องสร้าง Jar Test ใหม่เมื่อต้องการใช้เกณฑ์ใหม่
 - ยืนยันว่า `site_chemicals` เป็น mapping สารที่ Site ใช้ได้โดยไม่เก็บราคา; ราคาและผู้ขายอยู่ใน `site_chemical_contracts` เพื่อรองรับหลาย Vendor/หลายราคาต่อสารชนิดเดียวกัน
-- กำหนด Transaction Jar Test หลัก 6 ตาราง: งาน, ค่าน้ำดิบ, บีกเกอร์, dose รายบีกเกอร์, ผลคุณภาพ และ dose สรุปสุดท้าย
+- ขยายแบบร่าง Transaction Jar Test เป็น 9 ตาราง โดยเพิ่ม `jar_test_rounds`, `jar_test_mixing_conditions` และ `jar_test_selected_chemicals` สำหรับหลายรอบ สภาวะทดลอง และสารที่เลือกระดับงาน
+- ปรับ Notion `jar_tests` ให้อ้าง `site_raw_units` ที่เปิดใช้งานของ Site เดียวกัน และปรับ `jar_test_beakers` ให้อ้างรอบ
+- ยืนยันพารามิเตอร์น้ำดิบตั้งต้น 9 รายการต่อ Site และปรับ `jar_test_raw_water_results` ให้อ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงาน
+- สร้าง schema draft ใน Notion สำหรับ `role_type` และ `users`; เพิ่ม role scope เบื้องต้น, `password_hash`, ขอบเขต BU/Site และกติกาความสัมพันธ์ของผู้ใช้
+- ตรวจและปิดสถานะ Notion ของ `job_type`, `site_chemical_contracts` และ `jar_tests` เป็น Done พร้อมแก้ตัวอย่างรหัสงานและ FK `users(id)`
 
 ## Accepted decisions
 
@@ -72,7 +76,7 @@
 
 `water_source` ของ Jar Test ยังคงหมายถึง `raw_unit` เท่านั้น โดยต้องเป็นรายการที่ mapping กับ Site ของงาน
 
-รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md`, `docs/decisions/ADR-0002-postgresql-as-primary-database.md` และ `docs/decisions/ADR-0003-site-scoped-jar-test-settings.md`
+รายละเอียดเหตุผลอยู่ใน `docs/decisions/ADR-0001-organization-business-unit-site-water-source.md`, `docs/decisions/ADR-0002-postgresql-as-primary-database.md`, `docs/decisions/ADR-0003-site-scoped-jar-test-settings.md`, `docs/decisions/ADR-0004-jar-test-rounds-and-mixing-conditions.md`, `docs/decisions/ADR-0005-jar-test-chemical-selection-per-job.md` และ `docs/decisions/ADR-0006-user-role-type-schema.md`
 
 ## Additional accepted decisions (2026-09-23)
 
@@ -84,7 +88,15 @@
 ## Additional accepted decisions (2026-09-25)
 
 21. ราคาไม่อยู่ใน `site_chemicals`; `site_chemical_contracts` เป็นเจ้าของผู้ขายและราคาตามสัญญา และข้อมูล Jar Test ต้องเก็บ price snapshot ที่ใช้คำนวณ
-22. Jar Test มี 6 Transaction หลัก โดย dose สรุปสุดท้ายแยกจาก dose ที่ทดลองต่อบีกเกอร์
+22. Dose สรุปสุดท้ายแยกจาก dose ที่ทดลองต่อบีกเกอร์
+23. หนึ่งงาน Jar Test มีหลายรอบได้ แต่ละรอบมีบีกเกอร์หมายเลข 1–6 และบันทึกสภาวะกวนผสม/ตกตะกอนใน `jar_test_mixing_conditions` รายรอบ
+24. แหล่งน้ำดิบของงานต้องเป็น `site_raw_units` ที่เปิดใช้งานและเป็นของ Site เดียวกับงาน
+25. ผลคุณภาพน้ำเกิดในวันทดสอบของงานเดียวกัน ไม่เก็บวัน/เวลาวัดแยกและไม่เก็บ `operating_status_id`
+26. หนึ่งงาน Jar Test เลือกสารได้หนึ่งรายการต่อ `jar_chemical_type` ใช้สารเดิมทุกรอบและทุกบีกเกอร์ แต่เปลี่ยน dose ได้; สัญญาหลายฉบับของสารเดียวกันไม่ถือเป็นสารคนละรายการ
+27. Site ใหม่มีพารามิเตอร์น้ำดิบตั้งต้น 9 รายการ และผลน้ำดิบของงานอ้าง mapping ระดับ Site; Admin เพิ่มหรือปิดรายการระดับ Site ได้
+28. `role_type` เป็น Global Master ของบทบาท มี `code` ที่ไม่ซ้ำและ `scope_level` ระดับ SYSTEM/ORGANIZATION/BUSINESS_UNIT/SITE; permission รายเมนูยังแยกออกแบบภายหลัง
+29. `users` เป็น schema พื้นฐานสำหรับรหัสพนักงาน เบอร์โทร Organization/BU/Site role username และ `password_hash`; Organization/BU/Site อาจเป็น NULL ตามระดับผู้ใช้ และผู้ใช้ที่มี Site ต้องอยู่ใน BU/Organization เดียวกัน
+30. หน้าตาราง `role_type`, `users`, `job_type`, `site_chemical_contracts` และ `jar_tests` ใน Notion ได้รับการเติม schema/คำอธิบายและปิดสถานะเป็น Done ตามขอบเขต draft ปัจจุบัน
 
 ## Canonical baseline
 
@@ -102,13 +114,13 @@
 2. วิธีระบุหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` ที่ชื่อหรือขนาดซ้ำกันในหลาย Site
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
 4. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
-5. ขอบเขต role และ permission ของ Organization, Business Unit และ Site
+5. permission รายเมนู, role assignment และ mapping ผู้ใช้หลาย Site หลังจากมีรายการฟังก์ชันที่ต้องควบคุมครบ
 6. Target workflow ของ Jar Test รุ่นแรก: จำลอง legacy ทุกจุดหรืออนุญาตแก้ UX บางส่วน
 7. ค่าจริงของ Bound ที่แต่ละ Site จะใช้
 8. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
 9. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
 10. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
-11. Physical DDL ของ `users` และการยืนยัน seed mapping จริงของ `site_raw_units`
+11. การยืนยัน seed mapping จริงของ `site_raw_units`
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
@@ -124,7 +136,7 @@
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md), [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md), [กติกา Bound และ lifecycle ของ Jar Test](docs/memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md) และ [ราคาเคมีและ Transaction ของ Jar Test](docs/memory/sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md), [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md), [กติกา Bound และ lifecycle ของ Jar Test](docs/memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md), [ราคาเคมีและ Transaction ของ Jar Test](docs/memory/sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md), [Jar Test หลายรอบ/สภาวะกวน](docs/memory/sessions/2026-09-25-jar-test-multi-round-and-mixing.md), [การเลือกสารระดับงาน](docs/memory/sessions/2026-09-25-jar-test-chemical-selection.md), [พารามิเตอร์น้ำดิบตั้งต้น](docs/memory/sessions/2026-09-25-jar-test-raw-water-defaults.md) และ [schema Role Type และ Users](docs/memory/sessions/2026-09-25-user-role-schema.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
 
 อ่าน [Jar Test Setting รายสถานี](docs/memory/sessions/2026-09-23-jar-test-site-settings.md) และ [ข้อกำหนด TO-BE](JarTest/jar-test-site-settings-requirements-th.md) ก่อนออกแบบ schema หรือ workflow ที่เกี่ยวข้อง
 

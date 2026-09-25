@@ -69,4 +69,4 @@
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
 4. ตารางประเภทและ mapping ต้องมี effective dates, active status หรือ Site-specific metadata หรือไม่
 5. Jar Test จะอ้าง `raw_unit` โดยตรงพร้อม constraint หรืออ้าง Site–Raw Unit relationship record โดยตรง
-6. Physical DDL ของ `users` และ seed mapping จริงของ `site_raw_units` ยังไม่ถูกยืนยัน
+6. มี schema draft พื้นฐานของ `users` แล้วใน [ADR-0006](ADR-0006-user-role-type-schema.md); physical DDL และ seed mapping จริงของ `site_raw_units` ยังไม่ถูกยืนยัน

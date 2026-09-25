@@ -33,11 +33,19 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 **Global Master**:
 ข้อมูลอ้างอิงกลางที่ออกแบบให้หลาย Site และหลายโมดูลใช้งานร่วมกัน ขอบเขตการแบ่งข้อมูลระหว่าง Organization ยังต้องตัดสินใจ
 
+**Role Type (`role_type`)**:
+ตาราง Master กลางของบทบาทผู้ใช้ เช่น Super Admin, Admin, Operator และ Supervisor ใช้ `code` เป็นรหัสคงที่และ `scope_level` เป็นขอบเขตข้อมูลเบื้องต้น (`SYSTEM`, `ORGANIZATION`, `BUSINESS_UNIT`, `SITE`) ไม่ใช่ตารางสิทธิ์รายเมนูโดยตรง
+
+**User (`users`)**:
+บัญชีผู้ใช้ที่เก็บ `employee_code`, `phone`, ขอบเขต `organization_id`/`business_unit_id`/`site_id`, `role_type_id`, `username` และ `password_hash` โดยไม่เก็บรหัสผ่านแบบ plaintext ผู้ใช้ระดับระบบอาจยังไม่ผูก Organization; ผู้ใช้ระดับ Organization อาจไม่ผูก BU หรือ Site; หากผู้ใช้ต้องดูแลหลาย Site ให้เพิ่ม mapping แยกในระยะถัดไป
+
 **Jar Test**:
 กระบวนการทดสอบเพื่อหาอัตราจ่ายสารเคมีที่เหมาะสมกับตัวอย่างน้ำ โดยบันทึกข้อมูลน้ำดิบ สารเคมี รอบทดลอง ผลคุณภาพ การประเมินด้วย Bound และผลสรุป
 
 **Jar Test Site Settings**:
 ชุดค่าตั้ง Jar Test ระดับ Site สำหรับกำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงรายการสารเคมีที่ Site ใช้งานได้ ใช้กับ raw_unit ที่ mapping กับ Site นั้น ราคาและผู้ขายอยู่ในสัญญาจัดซื้อของสารประจำ Site ไม่ใช่ใน mapping สารเคมีโดยตรง เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่ใช่ Site Setting
+
+Site ใหม่มีพารามิเตอร์น้ำดิบตั้งต้น 9 รายการใน `site_jar_test_raw_properties`: Turbidity, True Color, pH, Conductivity, Temperature, Total Alkalinity as CaCO3, Iron, Total Manganese และ Dissolved manganese ผู้ดูแลเพิ่มรายการจาก `wq_parameter` หรือปิดรายการระดับ Site ได้
 
 **Site Chemical Contract (`site_chemical_contracts`)**:
 สัญญาราคาและผู้ขายของสารเคมีที่ Site ใช้งานได้ หนึ่งสารเคมีอาจมีหลาย Vendor หรือหลายสัญญาที่ราคาต่างกัน การบันทึก Jar Test อ้างสัญญาที่เลือกและเก็บ snapshot ของราคาไว้กับข้อมูลธุรกรรม
@@ -48,8 +56,13 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 **Test Round (รอบทดสอบ)**:
 ชุดการทดลอง Jar Test หนึ่งรอบ ซึ่งในระบบเดิมประกอบด้วย Jar 1 ถึง Jar 6
 
+งาน Jar Test หนึ่งงานมีหลายรอบได้ `jar_test_rounds.round_no` จึงไม่ซ้ำภายในงาน และหมายเลขบีกเกอร์ 1–6 เริ่มใหม่ในแต่ละรอบ สภาวะกวนผสมและตกตะกอนเก็บใน `jar_test_mixing_conditions` ของรอบนั้น
+
 **Jar**:
 ภาชนะทดลองหนึ่งใบใน Test Round ซึ่งมีอัตราจ่ายสารเคมี ผลคุณภาพ และผลผ่านหรือไม่ผ่านของตนเอง
+
+**Selected Chemical (`jar_test_selected_chemicals`)**:
+สารเคมีที่เลือกให้หนึ่งบทบาท (`jar_chemical_type`) ในงาน Jar Test ใช้สารรายการเดิมตลอดทุก Test Round; dose เปลี่ยนได้ตามบีกเกอร์ ส่วนสัญญาผู้ขาย/ราคาเป็นข้อมูลแยกจากตัวสาร
 
 **Stock Concentration**:
 ความเข้มข้นของสารละลายตั้งต้นที่ใช้ร่วมกับ target dose ในการคำนวณตามหลัก C1V1 = C2V2
@@ -58,6 +71,7 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 
 - Jar Test Site Settings กำหนดแยกตาม Site และใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น
 - `site_chemicals` ระบุเพียงสารที่ Site ใช้งานได้; ราคาและผู้ขายอยู่ใน `site_chemical_contracts`
+- หนึ่งงาน Jar Test เลือกสารได้หนึ่งรายการต่อ `jar_chemical_type` ผ่าน `jar_test_selected_chemicals`; ทุก round, beaker และผลสรุปต้องอ้างสารที่เลือกในงานเดียวกัน
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ไว้ตรวจย้อนหลัง
 - เกณฑ์ Bound ปัจจุบันมีได้หนึ่งชุดต่อ Site, Parameter และ Parameter Type; การแก้เกณฑ์มีผลกับงานที่ยังไม่ submit เท่านั้น งานที่ submit แล้วคงใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่หากต้องการใช้เกณฑ์ใหม่
 - เงื่อนไขการกวนและตกตะกอนบันทึกเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่ใช่ Site Setting และไม่ใช้คำนวณ dose หรือผลผ่าน/ไม่ผ่านตามข้อกำหนดที่อนุมัติ
@@ -72,13 +86,17 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - DDL draft ของ **Potable Unit** และ **Potable Transfer Unit** ต้องมี `organization_id`; `raw_unit` ยังคงเป็น Global Master และไม่ใช้ `organization_id`
 - **Jar Test** ใช้เฉพาะประเภทน้ำดิบและเลือกรายการ **Raw Unit** ที่มี mapping กับ Site ของงาน
 - หนึ่ง **Test Round** มี Jar จำนวน 6 ใบตาม legacy baseline
+- งาน Jar Test เลือกจุดน้ำดิบผ่าน `site_raw_units` ที่เปิดใช้งานและอยู่ใน Site เดียวกับงาน
+- ผลคุณภาพน้ำอยู่ในวันทดสอบของงาน Jar Test โดยไม่เก็บฟิลด์วัน/เวลาวัดแยกหรือ `operating_status_id` ในแบบใหม่
+- `users` อ้าง `role_type`, `organization`, `business_unit` และ `sites`; ถ้ามี `site_id` ต้องเป็น Site ใต้ BU/Organization เดียวกัน และถ้ามี `business_unit_id` ต้องอยู่ใน Organization เดียวกับผู้ใช้
+- `role_type.scope_level` เป็นข้อจำกัดขอบเขตเบื้องต้น ส่วน permission รายเมนูและ mapping ผู้ใช้หลาย Site ยังเป็นงานออกแบบถัดไป
 
 ## Resolved Ambiguities
 
 - Jar Test Setting เป็นฟังก์ชัน TO-BE ที่ตั้งค่าแยกตาม Site; ใช้กับ raw_unit ที่ mapping กับ Site และไม่แทนที่ Site-Raw Unit mapping
 - Jar Test Site Settings ครอบคลุมพารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และรายการสารเคมีที่ Site ใช้; ราคาตามผู้ขายอยู่ใน `site_chemical_contracts`; เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลต่อการทดลอง
 - Bound ใช้การเปรียบเทียบแบบ inclusive; `lower_bound = NULL` คือ 0, `upper_bound = NULL` คือไม่มีเพดานบน และห้าม Bound ว่างทั้งคู่
-- งาน Jar Test ต้องเก็บสำเนาค่าตั้งที่ใช้ และห้ามใช้ค่าตัวอย่างจาก MAMIS เป็นค่าเริ่มต้นของ UMW2
+- งาน Jar Test ต้องเก็บสำเนาค่าตั้งที่ใช้ ชุดพารามิเตอร์น้ำดิบ 9 รายการได้รับอนุมัติเป็นค่าเริ่มต้นแล้ว; ค่า Bound ราคา และค่าเชิงปฏิบัติการอื่นจาก MAMIS ยังห้ามใช้เป็นค่าเริ่มต้นโดยไม่มีคำยืนยัน
 
 - `กิจการประปา` และ `สถานี` เป็นคนละระดับ
 - `Business Unit` คือกิจการประปา ส่วน `Site` คือสถานีภายใต้กิจการประปา
@@ -91,6 +109,8 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 - Unit อีก 4 ประเภทไม่ใช้ร่วมข้าม Organization
 - `potable_unit` และ `potable_transfer_unit` ต้องมี `organization_id` ใน DDL draft เพื่อระบุ Organization เจ้าของรายการ
 - `filtration_subunits.unit_no` เป็นหมายเลขของ Master กลาง จึงไม่ซ้ำระดับ global; ความสัมพันธ์กับ Site อยู่ที่ `site_filtration_subunits`
+- `role_type` เป็น Master กลางของบทบาท และ `users` เป็นบัญชีผู้ใช้พื้นฐานที่ผูกกับ BU/Site ได้ โดยใช้ `password_hash` แทนรหัสผ่านจริง
+- บทบาทตั้งต้น 8 รายการคือ `SUPER_ADMIN`, `ADMIN`, `OUTSOURCE`, `OPERATOR`, `SHIFT_LEADER`, `SUPERVISOR`, `MANAGER` และ `DIRECTOR`; รายละเอียด permission รายเมนูยังไม่ถือว่ายืนยัน
 
 ## Open Ambiguities
 

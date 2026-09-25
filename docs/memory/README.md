@@ -4,7 +4,7 @@
 
 ## เริ่มอ่าน
 
-หัวข้อใหม่ที่ได้รับอนุมัติ: [ราคาเคมีและ Transaction ของ Jar Test](sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md)
+หัวข้อใหม่ที่ได้รับอนุมัติ: [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md)
 
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
@@ -17,7 +17,11 @@
 9. อ่านเอกสารเจ้าของ requirement, ศัพท์กลาง และ architecture ที่บันทึกอ้างถึง
 10. อ่าน [กติกา Bound และ lifecycle ของ Jar Test](sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md) ก่อนออกแบบหรือพัฒนา Jar Test Setting ที่เกี่ยวข้องกับผลทดสอบ
 11. อ่าน [ราคาเคมีและ Transaction ของ Jar Test](sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md) ก่อนออกแบบราคา สัญญา หรือตารางธุรกรรม Jar Test
-12. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
+12. อ่าน [Jar Test หลายรอบและสภาวะกวนผสม](sessions/2026-09-25-jar-test-multi-round-and-mixing.md) ก่อนปรับโครงสร้างรอบ บีกเกอร์ หรือแหล่งน้ำดิบของงาน
+13. อ่าน [การเลือกสารเคมีระดับงาน Jar Test](sessions/2026-09-25-jar-test-chemical-selection.md) ก่อนปรับตารางสารที่เลือกหรือ dose
+14. อ่าน [พารามิเตอร์น้ำดิบตั้งต้น 9 รายการ](sessions/2026-09-25-jar-test-raw-water-defaults.md) ก่อนปรับค่าตั้งหรือผลน้ำดิบของ Jar Test
+15. อ่าน [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md) ก่อนเพิ่ม FK ผู้ใช้หรือออกแบบสิทธิ์
+16. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 
