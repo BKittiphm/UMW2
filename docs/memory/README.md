@@ -4,7 +4,7 @@
 
 ## เริ่มอ่าน
 
-หัวข้อใหม่ที่ได้รับอนุมัติ: [กติกา Bound และ lifecycle ของ Jar Test](sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md)
+หัวข้อใหม่ที่ได้รับอนุมัติ: [ราคาเคมีและ Transaction ของ Jar Test](sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md)
 
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
@@ -16,7 +16,8 @@
 8. อ่าน [การปรับ Site–Raw Unit mapping](sessions/2026-09-21-site-raw-unit-mapping.md) สำหรับโครงสร้าง `site_raw_units`, uniqueness และ FK actions ล่าสุด
 9. อ่านเอกสารเจ้าของ requirement, ศัพท์กลาง และ architecture ที่บันทึกอ้างถึง
 10. อ่าน [กติกา Bound และ lifecycle ของ Jar Test](sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md) ก่อนออกแบบหรือพัฒนา Jar Test Setting ที่เกี่ยวข้องกับผลทดสอบ
-11. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
+11. อ่าน [ราคาเคมีและ Transaction ของ Jar Test](sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md) ก่อนออกแบบราคา สัญญา หรือตารางธุรกรรม Jar Test
+12. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 

@@ -47,7 +47,7 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 ### Site-scoped Jar Test settings (approved TO-BE)
 
 - แต่ละ Site มี Jar Test Setting ของตนเอง ไม่ใช้ค่าตั้งชุดเดียวทั่วระบบ
-- Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ใช้และราคา
+- Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ Site ใช้; ราคาและผู้ขายอยู่ในสัญญาจัดซื้อของสาร
 - ค่าตั้งของ Site ใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; Jar Test ยังคงเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site ของงาน
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ เพื่อไม่ให้การแก้ Setting ในอนาคตเปลี่ยนข้อมูลย้อนหลัง
 - เกณฑ์ Bound มีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; แก้เกณฑ์โดยปรับรายการเดิม ไม่มีช่วงวันมีผลในขอบเขตปัจจุบัน
@@ -56,6 +56,17 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านในขอบเขตที่อนุมัติ
 - หาก Site ยังไม่มีค่าตั้งที่จำเป็น ระบบต้องแจ้งว่าต้องตั้งค่าก่อนใช้งาน และห้ามเลือกใช้ค่าเริ่มต้นจาก MAMIS หรือ Site อื่นโดยเงียบ
 - ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม ไม่แก้หรือแทนที่ legacy baseline
+
+### Jar Test transaction model (current draft)
+
+- `jar_tests` เป็นหัวงาน เก็บ Site, น้ำดิบ, สภาวะทดลอง, สถานะ submit และบีกเกอร์ที่เลือก
+- `jar_test_raw_water_results` เก็บค่าน้ำดิบของงาน
+- `jar_test_beakers` เก็บบีกเกอร์ 1–6 และต้นทุนรวมที่คำนวณจากรายการหยอดสาร
+- `jar_test_chemical_doses` เก็บสารทดลองต่อบีกเกอร์ พร้อม snapshot ที่ใช้คำนวณ C1V1 = C2V2 และต้นทุน
+- `jar_test_results` เก็บผลคุณภาพต่อบีกเกอร์ พร้อม snapshot Bound เมื่อ submit
+- `jar_test_final_chemical_doses` เก็บค่า dose สรุปสุดท้ายต่อสาร ซึ่งอาจต่างจาก dose ของบีกเกอร์ที่เลือก
+
+`site_chemicals` เป็น mapping ว่าสารใดใช้ได้ใน Site; `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญา หนึ่งสารอาจมีหลายสัญญาหรือหลายราคา ข้อมูล Jar Test เก็บ price snapshot ของสัญญาที่เลือก ไม่ใช่ราคาคงที่ใน `site_chemicals`
 
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
@@ -95,8 +106,9 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 ## Explicitly deferred
 
 - physical schema และ snapshot representation ของ Jar Test Site Settings
-- รายการพารามิเตอร์ หน่วย Bound และสารเคมี/ราคาที่แต่ละ Site จะตั้งค่า
+- รายการพารามิเตอร์ หน่วย Bound สารเคมี สัญญา และราคาจริงที่แต่ละ Site จะใช้
 - permission และ audit ของผู้แก้ไข Site Settings
+- physical schema ของล็อตสต๊อกและการตัดสต๊อกจริง; ตาราง Jar Test ปัจจุบันเก็บต้นทุนที่ใช้คำนวณเท่านั้น
 - พฤติกรรมของ draft เมื่อ Site ยังไม่มีค่าตั้งครบ
 - การตั้งค่าเฉพาะ raw_unit ภายใน Site เป็นส่วนขยายที่ยังไม่อนุมัติ
 - Physical table และ column names
