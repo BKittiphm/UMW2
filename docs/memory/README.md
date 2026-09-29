@@ -22,6 +22,7 @@
 14. อ่าน [พารามิเตอร์น้ำดิบตั้งต้น 9 รายการ](sessions/2026-09-25-jar-test-raw-water-defaults.md) ก่อนปรับค่าตั้งหรือผลน้ำดิบของ Jar Test
 15. อ่าน [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md) ก่อนเพิ่ม FK ผู้ใช้หรือออกแบบสิทธิ์
 16. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
+17. อ่าน [การออกแบบ Chemical Master](sessions/2026-09-29-chemical-master-design.md) ก่อนปรับ `chemicals`, `site_chemicals`, บทบาทสาร หรือสัญญาสารเคมี; แบบร่างนี้ยังรอการยืนยัน scope
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 

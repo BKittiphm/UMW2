@@ -83,6 +83,10 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 `site_chemicals` เป็น mapping ว่าสารใดใช้ได้ใน Site; `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญา หนึ่งสารอาจมีหลายสัญญาหรือหลายราคา ข้อมูล Jar Test เก็บ price snapshot ของสัญญาที่เลือก ไม่ใช่ราคาคงที่ใน `site_chemicals`
 
+### Proposed chemical master model
+
+ADR-0007 เสนอให้ `chemicals` เป็น Global Master ของตัวสารหรือสูตรผลิตภัณฑ์ โดยไม่เก็บ Organization, Site, Vendor, Contract, ราคา หรือบทบาท Jar Test ในตารางเดียวกัน สารสูตรเดียวกันจากหลาย Vendor ใช้ Master เดียว ส่วนต่างรูปแบบหรือความเข้มข้นที่มีผลต่อการใช้งานให้เป็นคนละ `chemical_id`; `site_chemicals`, `chemical_type_mappings` และ `site_chemical_contracts` ทำหน้าที่กำหนด Site, บทบาท และราคาแยกกัน ข้อเสนอนี้ยังรอการยืนยันและยังไม่ใช่ physical schema ที่อนุมัติ
+
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
 เส้นทางเชิงแนวคิดคือ `Site → Site–Raw Unit mapping → raw_unit → Jar Test เลือกหนึ่งรายการ` โดย `raw_unit` หนึ่งรายการเชื่อมกับหลาย Site ได้แม้ Site อยู่คนละ Organization

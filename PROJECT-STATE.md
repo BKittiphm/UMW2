@@ -54,6 +54,7 @@
 - ยืนยันพารามิเตอร์น้ำดิบตั้งต้น 9 รายการต่อ Site และปรับ `jar_test_raw_water_results` ให้อ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงาน
 - สร้าง schema draft ใน Notion สำหรับ `role_type` และ `users`; เพิ่ม role scope เบื้องต้น, `password_hash`, ขอบเขต BU/Site และกติกาความสัมพันธ์ของผู้ใช้
 - ตรวจและปิดสถานะ Notion ของ `job_type`, `site_chemical_contracts` และ `jar_tests` เป็น Done พร้อมแก้ตัวอย่างรหัสงานและ FK `users(id)`
+- สร้างหน้า Notion `chemicals` ใน Global Master Data พร้อม Data Dictionary, DDL draft, constraints และตัวอย่างรายการ; ข้อเสนอให้เป็น Global Master ข้าม Organization บันทึกใน ADR-0007 สถานะ Proposed
 
 ## Accepted decisions
 
@@ -121,6 +122,8 @@
 9. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
 10. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
 11. การยืนยัน seed mapping จริงของ `site_raw_units`
+12. ยืนยัน ADR-0007 ว่า `chemicals` เป็น Global Master ข้าม Organization และต่างรูปแบบ/ความเข้มข้นที่มีผลต่อการใช้งานต้องเป็นคนละ `chemical_id`
+13. รวมรายการ `jar_chemical_type` ที่ซ้ำใน Notion และยืนยันชื่อ physical table canonical ระหว่าง `jar_chemical_type`, `jar_chemical_types` และ `chemical_types`
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 

@@ -48,6 +48,10 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
 - [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2
 
+## Proposed decisions
+
+- [ADR-0007: Global Chemical Master และการแยกสูตรผลิตภัณฑ์](decisions/ADR-0007-global-chemical-master.md) — แบบร่าง `chemicals` ที่รอเจ้าของโครงการยืนยัน scope และหลักการแยกรายการ
+
 ## Active work records
 
 - [`aegis/work/2026-09-08-project-continuity/20-checkpoint.md`](aegis/work/2026-09-08-project-continuity/20-checkpoint.md) — checkpoint ล่าสุดของการจัดทำชุดเอกสารส่งต่องาน
