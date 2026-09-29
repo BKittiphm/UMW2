@@ -98,6 +98,7 @@
 28. `role_type` เป็น Global Master ของบทบาท มี `code` ที่ไม่ซ้ำและ `scope_level` ระดับ SYSTEM/ORGANIZATION/BUSINESS_UNIT/SITE; permission รายเมนูยังแยกออกแบบภายหลัง
 29. `users` เป็น schema พื้นฐานสำหรับรหัสพนักงาน เบอร์โทร Organization/BU/Site role username และ `password_hash`; Organization/BU/Site อาจเป็น NULL ตามระดับผู้ใช้ และผู้ใช้ที่มี Site ต้องอยู่ใน BU/Organization เดียวกัน
 30. หน้าตาราง `role_type`, `users`, `job_type`, `site_chemical_contracts` และ `jar_tests` ใน Notion ได้รับการเติม schema/คำอธิบายและปิดสถานะเป็น Done ตามขอบเขต draft ปัจจุบัน
+31. ไม่ใช้ `default_stock_concentration` ใน Chemical Master; ผู้ใช้ต้องกรอกความเข้มข้นตั้งต้นและหน่วยที่ใช้จริงทุกงาน Jar Test และบันทึกไว้กับสารที่เลือกของงาน
 
 ## Canonical baseline
 

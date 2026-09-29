@@ -21,8 +21,8 @@
 - ไม่เก็บ Organization, Site, Vendor, Contract, ราคา หรือบทบาท Jar Test ในตารางนี้
 - แยกรายการเมื่อรูปแบบหรือความเข้มข้นมีผลต่อการใช้งาน เช่น PACL น้ำ 10% กับ PACL ผง
 - ใช้ `physical_form` (`LIQUID`, `SOLID`, `GAS`) แทน `is_gas`
-- เพิ่ม default unit และ default stock concentration เป็นค่าช่วยกรอก; ธุรกรรมยังเก็บ snapshot จริง
-- เพิ่ม audit columns และ constraint สำหรับ code, physical form และคู่ค่าความเข้มข้น/หน่วย
+- เพิ่ม default unit สำหรับอธิบายปริมาณของสาร แต่ไม่เพิ่ม default stock concentration ใน Master
+- เพิ่ม audit columns และ constraint สำหรับ code กับ physical form
 
 ## สิ่งที่ทำจริง
 
@@ -31,6 +31,10 @@
 - ตั้งสถานะหน้าเป็น Done ในความหมายว่าเอกสารแบบร่างครบถ้วน ไม่ใช่การอนุมัติ physical schema
 - ไม่ seed `default_uom_id` เพราะยังไม่ได้ยืนยัน ID หน่วยจริง
 - สร้าง [ADR-0007](../../decisions/ADR-0007-global-chemical-master.md) สถานะ `Proposed`
+
+## คำยืนยันเพิ่มเติม
+
+เจ้าของโครงการยืนยันว่าไม่ใช้ `default_stock_concentration`: ผู้ใช้ต้องกรอกความเข้มข้นและหน่วยของสารที่ใช้จริงทุกงาน Jar Test จึงตัดสองคอลัมน์ default concentration ออกจากหน้า `chemicals` และกำหนด `jar_test_selected_chemicals.stock_concentration` กับ `stock_concentration_uom_id` เป็น `NOT NULL`; ค่าความเข้มข้นต้องมากกว่า 0
 
 ## สิ่งที่ยังต้องยืนยัน
 

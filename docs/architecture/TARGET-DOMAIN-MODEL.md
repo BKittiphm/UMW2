@@ -74,6 +74,7 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - `jar_tests` เป็นหัวงาน เก็บ Site, `site_raw_unit_id` ที่เป็น mapping ของ Site เดียวกัน, `test_datetime`, สถานะ submit และบีกเกอร์ที่เลือก; ผลคุณภาพน้ำเกิดในวันทดสอบเดียวกันโดยไม่เก็บฟิลด์วัน/เวลาวัดแยกหรือ `operating_status_id`
 - `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping
 - `jar_test_selected_chemicals` เก็บสารที่เลือกหนึ่งรายการต่อ `jar_chemical_type` ระดับงาน ไม่ใช่ระดับรอบหรือระดับสัญญาผู้ขาย
+- ผู้ใช้กรอก stock concentration และหน่วยที่ใช้จริงทุกครั้งใน `jar_test_selected_chemicals`; ทั้งสองค่าต้องมีและค่าความเข้มข้นต้องมากกว่า 0 ไม่มี default concentration จาก `chemicals`
 - `jar_test_rounds` เก็บรอบการทดลองหลายรอบในงานเดียว โดย `round_no` ไม่ซ้ำภายในงาน
 - `jar_test_beakers` เก็บบีกเกอร์ 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร
 - `jar_test_mixing_conditions` เก็บลำดับ ชื่อขั้น เวลาและ RPM ของการกวนหรือตกตะกอนแยกตามรอบ
