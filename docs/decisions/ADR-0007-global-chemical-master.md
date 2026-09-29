@@ -1,6 +1,6 @@
 # ADR-0007: Global Chemical Master และการแยกสูตรผลิตภัณฑ์
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-09-29
 - Scope: Chemical master shared by Jar Test and future modules (TO-BE)
 
@@ -10,7 +10,7 @@
 
 ตัวอย่างข้อมูลหน้างานแสดงว่าสารสูตรเดียวกัน เช่น PACL น้ำ 10% อาจซื้อจากหลายผู้ขายและหลายราคา ขณะเดียวกัน PACL น้ำ 10% กับ PACL ผงเป็นรายการที่มีรูปแบบและการใช้งานต่างกัน
 
-## Proposed decision
+## Decision
 
 1. ให้ `chemicals` เป็น Global Master ของตัวสารหรือสูตรผลิตภัณฑ์ และไม่เก็บ `organization_id`, `site_id`, Vendor, Contract หรือราคา
 2. สารสูตรเดียวกันจากหลาย Vendor ใช้ `chemical_id` เดียวกัน แล้วแยกสัญญาและราคาผ่าน `site_chemical_contracts`
@@ -34,5 +34,5 @@
 
 ## Approval status
 
-แบบนี้เป็นข้อเสนอที่จัดทำตามคำขอให้ออกแบบตารางเมื่อวันที่ 29 กันยายน 2569 ยังต้องได้รับคำยืนยันโดยตรงจากเจ้าของโครงการก่อนเปลี่ยนสถานะ ADR เป็น `Accepted` และก่อนใช้เป็น physical schema
+เจ้าของโครงการยืนยันวันที่ 29 กันยายน 2569 ให้ `chemicals` เป็น Global Master ข้าม Organization และให้ PACL น้ำ 10% กับ PACL ผงเป็นคนละรายการสารตามหลักการแยกรูปแบบ/สูตรที่มีผลต่อการใช้งาน การยืนยันนี้รับรอง domain decision แต่ physical DDL, หน่วยจริง และ seed data ยังต้องตรวจแยกก่อนสร้างฐานข้อมูล
 

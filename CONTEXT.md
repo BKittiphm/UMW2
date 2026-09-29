@@ -45,24 +45,26 @@ _Avoid_: ใช้แทนรายการใน `raw_unit`, `potable_unit` �
 **Jar Test Site Settings**:
 ชุดค่าตั้ง Jar Test ระดับ Site สำหรับกำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงรายการสารเคมีที่ Site ใช้งานได้ ใช้กับ raw_unit ที่ mapping กับ Site นั้น ราคาและผู้ขายอยู่ในสัญญาจัดซื้อของสารประจำ Site ไม่ใช่ใน mapping สารเคมีโดยตรง เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่ใช่ Site Setting
 
-Site ใหม่มีพารามิเตอร์น้ำดิบตั้งต้น 9 รายการใน `site_jar_test_raw_properties`: Turbidity, True Color, pH, Conductivity, Temperature, Total Alkalinity as CaCO3, Iron, Total Manganese และ Dissolved manganese ผู้ดูแลเพิ่มรายการจาก `wq_parameter` หรือปิดรายการระดับ Site ได้
+Site ใหม่มีพารามิเตอร์น้ำดิบและพารามิเตอร์ผลทดสอบตั้งต้นชุดเดียวกัน 9 รายการ: Turbidity, True Color, pH, Conductivity, Temperature, Total Alkalinity as CaCO3, Iron, Total Manganese และ Dissolved manganese โดยใช้ Dissolved manganese แทน Soluble Manganese ผู้ดูแลเพิ่มรายการจาก `wq_parameter` หรือปิดรายการระดับ Site ได้ ในส่วนค่าน้ำดิบ บังคับกรอกก่อน submit เฉพาะ Turbidity
 
 **Site Chemical Contract (`site_chemical_contracts`)**:
-สัญญาราคาและผู้ขายของสารเคมีที่ Site ใช้งานได้ หนึ่งสารเคมีอาจมีหลาย Vendor หรือหลายสัญญาที่ราคาต่างกัน การบันทึก Jar Test อ้างสัญญาที่เลือกและเก็บ snapshot ของราคาไว้กับข้อมูลธุรกรรม
+สัญญาราคาและผู้ขายของสารเคมีที่ Site ใช้งานได้ หนึ่งสารเคมีอาจมีหลาย Vendor หรือหลายสัญญาที่ราคาต่างกัน Site เลือก contract ที่จะใช้ในหน้าตั้งค่าก่อนเริ่มงาน สารแต่ละรายการใช้ contract เดิมตลอดงาน และ Jar Test เก็บ snapshot ของ contract/ราคาไว้กับข้อมูลธุรกรรม
 
 **Bound**:
 เกณฑ์ต่ำสุดหรือสูงสุดที่ใช้ประเมินผลคุณภาพน้ำเป็นผ่านหรือไม่ผ่าน ระบบเป็นผู้คำนวณสถานะจาก Bound โดยใช้ขอบเขตแบบ inclusive: ค่าที่เท่ากับขอบล่างหรือขอบบนถือว่าผ่าน `lower_bound` ที่เป็น `NULL` หมายถึง 0, `upper_bound` ที่เป็น `NULL` หมายถึงไม่มีเพดานบน และห้ามให้ทั้งสองค่าเป็น `NULL`
 
+พารามิเตอร์ผลทดสอบตั้งต้นของ Site ใช้ `lower_bound = 0` และ `upper_bound = NULL`; ผู้ดูแลปรับค่าใน Site Setting ได้ภายหลัง
+
 **Test Round (รอบทดสอบ)**:
 ชุดการทดลอง Jar Test หนึ่งรอบ ซึ่งในระบบเดิมประกอบด้วย Jar 1 ถึง Jar 6
 
-งาน Jar Test หนึ่งงานมีหลายรอบได้ `jar_test_rounds.round_no` จึงไม่ซ้ำภายในงาน และหมายเลขบีกเกอร์ 1–6 เริ่มใหม่ในแต่ละรอบ สภาวะกวนผสมและตกตะกอนเก็บใน `jar_test_mixing_conditions` ของรอบนั้น
+งาน Jar Test ใหม่เริ่มต้นหนึ่งรอบและเพิ่มรอบได้ `jar_test_rounds.round_no` จึงไม่ซ้ำภายในงาน หมายเลขบีกเกอร์ 1–6 เริ่มใหม่ในแต่ละรอบ ผู้ใช้เลือกจำนวน Jar ที่ทดสอบได้ และก่อน submit ต้องกรอกผลให้ครบทุก Jar ที่เลือก สภาวะกวนผสมและตกตะกอนเก็บใน `jar_test_mixing_conditions` ของรอบนั้น
 
 **Jar**:
 ภาชนะทดลองหนึ่งใบใน Test Round ซึ่งมีอัตราจ่ายสารเคมี ผลคุณภาพ และผลผ่านหรือไม่ผ่านของตนเอง
 
 **Selected Chemical (`jar_test_selected_chemicals`)**:
-สารเคมีที่เลือกให้หนึ่งบทบาท (`jar_chemical_type`) ในงาน Jar Test ใช้สารรายการเดิมตลอดทุก Test Round; dose เปลี่ยนได้ตามบีกเกอร์ ส่วนสัญญาผู้ขาย/ราคาเป็นข้อมูลแยกจากตัวสาร
+สารเคมีที่เลือกให้หนึ่งบทบาท (`jar_chemical_type`) ในงาน Jar Test ใช้สารรายการเดิมและ contract รายการเดิมตลอดทุก Test Round; dose เปลี่ยนได้ตามบีกเกอร์ ส่วนสัญญาผู้ขาย/ราคาเป็นข้อมูลแยกจากตัวสารและต้องตั้งค่าก่อนสร้างงาน
 
 **Stock Concentration**:
 ความเข้มข้นของสารละลายตั้งต้นที่ผู้ใช้ต้องกรอกตามสารที่ใช้จริงทุกงาน Jar Test ใช้ร่วมกับ target dose ในการคำนวณตามหลัก C1V1 = C2V2 และเก็บไว้กับ `jar_test_selected_chemicals` ของงานนั้น ไม่มีค่าเริ่มต้นจาก `chemicals`
@@ -72,6 +74,7 @@ Site ใหม่มีพารามิเตอร์น้ำดิบตั
 - Jar Test Site Settings กำหนดแยกตาม Site และใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น
 - `site_chemicals` ระบุเพียงสารที่ Site ใช้งานได้; ราคาและผู้ขายอยู่ใน `site_chemical_contracts`
 - หนึ่งงาน Jar Test เลือกสารได้หนึ่งรายการต่อ `jar_chemical_type` ผ่าน `jar_test_selected_chemicals`; ทุก round, beaker และผลสรุปต้องอ้างสารที่เลือกในงานเดียวกัน
+- สารแต่ละรายการที่เลือกใช้อ้าง contract เดียวตลอดงาน หากต้องการใช้ราคาอื่นต้องเปลี่ยน contract ใน Site Setting ก่อนสร้างงาน Jar Test
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ไว้ตรวจย้อนหลัง
 - เกณฑ์ Bound ปัจจุบันมีได้หนึ่งชุดต่อ Site, Parameter และ Parameter Type; การแก้เกณฑ์มีผลกับงานที่ยังไม่ submit เท่านั้น งานที่ submit แล้วคงใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่หากต้องการใช้เกณฑ์ใหม่
 - เงื่อนไขการกวนและตกตะกอนบันทึกเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่ใช่ Site Setting และไม่ใช้คำนวณ dose หรือผลผ่าน/ไม่ผ่านตามข้อกำหนดที่อนุมัติ
@@ -85,7 +88,7 @@ Site ใหม่มีพารามิเตอร์น้ำดิบตั
 - **Potable Unit**, **Potable Transfer Unit**, **Sedimentation Unit** และ **Filtration Unit** ต้องเชื่อมกับ Site ผ่าน mapping ภายใน Organization เดียวกัน
 - DDL draft ของ **Potable Unit** และ **Potable Transfer Unit** ต้องมี `organization_id`; `raw_unit` ยังคงเป็น Global Master และไม่ใช้ `organization_id`
 - **Jar Test** ใช้เฉพาะประเภทน้ำดิบและเลือกรายการ **Raw Unit** ที่มี mapping กับ Site ของงาน
-- หนึ่ง **Test Round** มี Jar จำนวน 6 ใบตาม legacy baseline
+- หนึ่ง **Test Round** รองรับหมายเลข Jar 1–6 ผู้ใช้เลือกจำนวนที่จะทดสอบได้ และต้องกรอกผลครบเฉพาะ Jar ที่เลือก
 - งาน Jar Test เลือกจุดน้ำดิบผ่าน `site_raw_units` ที่เปิดใช้งานและอยู่ใน Site เดียวกับงาน
 - ผลคุณภาพน้ำอยู่ในวันทดสอบของงาน Jar Test โดยไม่เก็บฟิลด์วัน/เวลาวัดแยกหรือ `operating_status_id` ในแบบใหม่
 - `users` อ้าง `role_type`, `organization`, `business_unit` และ `sites`; ถ้ามี `site_id` ต้องเป็น Site ใต้ BU/Organization เดียวกัน และถ้ามี `business_unit_id` ต้องอยู่ใน Organization เดียวกับผู้ใช้
@@ -96,7 +99,8 @@ Site ใหม่มีพารามิเตอร์น้ำดิบตั
 - Jar Test Setting เป็นฟังก์ชัน TO-BE ที่ตั้งค่าแยกตาม Site; ใช้กับ raw_unit ที่ mapping กับ Site และไม่แทนที่ Site-Raw Unit mapping
 - Jar Test Site Settings ครอบคลุมพารามิเตอร์/หน่วยน้ำดิบ พารามิเตอร์ผลทดสอบ/Bound และรายการสารเคมีที่ Site ใช้; ราคาตามผู้ขายอยู่ใน `site_chemical_contracts`; เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลต่อการทดลอง
 - Bound ใช้การเปรียบเทียบแบบ inclusive; `lower_bound = NULL` คือ 0, `upper_bound = NULL` คือไม่มีเพดานบน และห้าม Bound ว่างทั้งคู่
-- งาน Jar Test ต้องเก็บสำเนาค่าตั้งที่ใช้ ชุดพารามิเตอร์น้ำดิบ 9 รายการได้รับอนุมัติเป็นค่าเริ่มต้นแล้ว; ค่า Bound ราคา และค่าเชิงปฏิบัติการอื่นจาก MAMIS ยังห้ามใช้เป็นค่าเริ่มต้นโดยไม่มีคำยืนยัน
+- งาน Jar Test ต้องเก็บสำเนาค่าตั้งที่ใช้ ชุดพารามิเตอร์น้ำดิบ/ผลทดสอบ 9 รายการและ Bound ตั้งต้น lower 0/upper ไม่กำหนดได้รับอนุมัติแล้ว; ราคาและค่าเชิงปฏิบัติการอื่นยังต้องตั้งค่าจริง
+- `chemicals` เป็น Global Master ข้าม Organization; สารต่างรูปแบบหรือสูตรที่มีผลต่อการใช้งาน เช่น PACL น้ำ 10% กับ PACL ผง เป็นคนละ `chemical_id`
 
 - `กิจการประปา` และ `สถานี` เป็นคนละระดับ
 - `Business Unit` คือกิจการประปา ส่วน `Site` คือสถานีภายใต้กิจการประปา

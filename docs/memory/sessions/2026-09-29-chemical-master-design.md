@@ -2,7 +2,7 @@
 
 วันที่จัดทำ: 2026-09-29
 
-ประเภท: แบบร่าง TO-BE ที่รอการยืนยัน
+ประเภท: คำยืนยัน TO-BE และแบบร่าง schema
 
 ## เป้าหมายและสถานะก่อนเริ่ม
 
@@ -36,10 +36,12 @@
 
 เจ้าของโครงการยืนยันว่าไม่ใช้ `default_stock_concentration`: ผู้ใช้ต้องกรอกความเข้มข้นและหน่วยของสารที่ใช้จริงทุกงาน Jar Test จึงตัดสองคอลัมน์ default concentration ออกจากหน้า `chemicals` และกำหนด `jar_test_selected_chemicals.stock_concentration` กับ `stock_concentration_uom_id` เป็น `NOT NULL`; ค่าความเข้มข้นต้องมากกว่า 0
 
+## คำยืนยันล่าสุด
+
+เจ้าของโครงการยืนยันวันที่ 29 กันยายน 2569 ว่า `chemicals` เป็น Global Master ข้าม Organization และ PACL น้ำ 10% กับ PACL ผงเป็นคนละรายการสารตามหลักการแยกรูปแบบ/สูตรที่มีผลต่อการใช้งาน จึงเปลี่ยน ADR-0007 เป็น Accepted
+
 ## สิ่งที่ยังต้องยืนยัน
 
-1. ยืนยันว่า `chemicals` เป็น Global Master ข้าม Organization ตามข้อเสนอ
-2. ยืนยันหลักการแยกสูตร/รูปแบบเป็นคนละ `chemical_id`
-3. ยืนยันชื่อ canonical ของ `jar_chemical_type` ที่ปัจจุบันมีรายการซ้ำใน Notion
-4. ยืนยันหน่วยและ seed data จริงก่อนนำ DDL ไปสร้างฐานข้อมูล
+1. ยืนยันชื่อ canonical ของ `jar_chemical_type` ที่ปัจจุบันมีรายการซ้ำใน Notion
+2. ยืนยันหน่วยและ seed data จริงก่อนนำ DDL ไปสร้างฐานข้อมูล
 

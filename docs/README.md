@@ -39,6 +39,8 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 
 ข้อสรุปเรื่องพารามิเตอร์น้ำดิบตั้งต้น 9 รายการอยู่ใน [บันทึกค่าเริ่มต้นน้ำดิบ](memory/sessions/2026-09-25-jar-test-raw-water-defaults.md)
 
+ข้อยืนยันล่าสุดเรื่องพารามิเตอร์ผลทดสอบ Bound ตั้งต้น ฟิลด์บังคับ จำนวน Jar contract และ Chemical Master อยู่ใน [บันทึกวันที่ 29 กันยายน](memory/sessions/2026-09-29-jar-test-implementation-defaults.md)
+
 ข้อสรุป schema พื้นฐานของบทบาทและผู้ใช้อยู่ใน [บันทึก Role Type และ Users](memory/sessions/2026-09-25-user-role-schema.md)
 
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่
@@ -49,13 +51,10 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 - [ADR-0004: Jar Test rounds and mixing conditions](decisions/ADR-0004-jar-test-rounds-and-mixing-conditions.md)
 - [ADR-0005: Jar Test chemical selection per job](decisions/ADR-0005-jar-test-chemical-selection-per-job.md)
 - [ADR-0006: User and role type schema baseline](decisions/ADR-0006-user-role-type-schema.md)
+- [ADR-0007: Global Chemical Master และการแยกสูตรผลิตภัณฑ์](decisions/ADR-0007-global-chemical-master.md)
 
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
 - [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2
-
-## Proposed decisions
-
-- [ADR-0007: Global Chemical Master และการแยกสูตรผลิตภัณฑ์](decisions/ADR-0007-global-chemical-master.md) — แบบร่าง `chemicals` ที่รอเจ้าของโครงการยืนยัน scope และหลักการแยกรายการ
 
 ## Active work records
 

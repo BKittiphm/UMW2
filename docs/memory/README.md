@@ -8,6 +8,8 @@
 
 ขอบเขตล่าสุดของระบบอ้างอิง: [UMW เดิมและ MAMIs](sessions/2026-09-29-external-system-references.md)
 
+ข้อยืนยัน Jar Test ล่าสุด: [ค่าเริ่มต้น ความครบถ้วน Contract และ Chemical Master](sessions/2026-09-29-jar-test-implementation-defaults.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test
@@ -24,8 +26,9 @@
 14. อ่าน [พารามิเตอร์น้ำดิบตั้งต้น 9 รายการ](sessions/2026-09-25-jar-test-raw-water-defaults.md) ก่อนปรับค่าตั้งหรือผลน้ำดิบของ Jar Test
 15. อ่าน [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md) ก่อนเพิ่ม FK ผู้ใช้หรือออกแบบสิทธิ์
 16. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
-17. อ่าน [การออกแบบ Chemical Master](sessions/2026-09-29-chemical-master-design.md) ก่อนปรับ `chemicals`, `site_chemicals`, บทบาทสาร หรือสัญญาสารเคมี; แบบร่างนี้ยังรอการยืนยัน scope
+17. อ่าน [การออกแบบ Chemical Master](sessions/2026-09-29-chemical-master-design.md) ก่อนปรับ `chemicals`, `site_chemicals`, บทบาทสาร หรือสัญญาสารเคมี
 18. อ่าน [ระบบอ้างอิง UMW เดิมและ MAMIs](sessions/2026-09-29-external-system-references.md) ก่อนเข้าเว็บอ้างอิงหรือทำการทดลองที่เปลี่ยนข้อมูล
+19. อ่าน [ค่าเริ่มต้นและความครบถ้วนของ Jar Test](sessions/2026-09-29-jar-test-implementation-defaults.md) ก่อนออกแบบ validation, จำนวนรอบ/Jar, contract หรือหน้ากรอกผล
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 

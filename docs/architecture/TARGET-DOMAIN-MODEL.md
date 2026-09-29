@@ -59,11 +59,11 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 
 - แต่ละ Site มี Jar Test Setting ของตนเอง ไม่ใช้ค่าตั้งชุดเดียวทั่วระบบ
 - Setting กำหนดพารามิเตอร์และหน่วยของคุณสมบัติน้ำดิบ พารามิเตอร์ผลทดสอบและ Bound รวมถึงสารเคมีที่ Site ใช้; ราคาและผู้ขายอยู่ในสัญญาจัดซื้อของสาร
-- Site ใหม่มี `site_jar_test_raw_properties` ตั้งต้น 9 แถวตามชุดที่อนุมัติ ผู้ดูแลเพิ่มพารามิเตอร์จาก Master หรือปิดรายการระดับ Site ได้
+- Site ใหม่มีพารามิเตอร์น้ำดิบและผลทดสอบตั้งต้นชุดเดียวกัน 9 รายการตามชุดที่อนุมัติ โดยใช้ Dissolved manganese แทน Soluble Manganese; ผู้ดูแลเพิ่มจาก Master หรือปิดรายการระดับ Site ได้
 - ค่าตั้งของ Site ใช้กับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; Jar Test ยังคงเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site ของงาน
 - งาน Jar Test เก็บสำเนาค่าตั้งที่ใช้ เพื่อไม่ให้การแก้ Setting ในอนาคตเปลี่ยนข้อมูลย้อนหลัง
 - เกณฑ์ Bound มีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; แก้เกณฑ์โดยปรับรายการเดิม ไม่มีช่วงวันมีผลในขอบเขตปัจจุบัน
-- การประเมิน Bound ใช้ขอบเขตรวม (`lower <= measured <= upper` เมื่อมี upper); `lower_bound = NULL` หมายถึง 0, `upper_bound = NULL` หมายถึงไม่มีเพดานบน และห้าม Bound ว่างทั้งคู่
+- การประเมิน Bound ใช้ขอบเขตรวม (`lower <= measured <= upper` เมื่อมี upper); ค่าเริ่มต้นของ 9 พารามิเตอร์คือ lower 0 และ upper `NULL` ซึ่งหมายถึงไม่มีเพดานบน
 - เกณฑ์ที่แก้ไขมีผลกับงานที่ยังไม่ submit; งานที่ submit แล้วคงใช้ snapshot เดิม และต้องสร้าง Jar Test ใหม่หากต้องการประเมินด้วยเกณฑ์ใหม่
 - เงื่อนไขการกวนและตกตะกอนเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านในขอบเขตที่อนุมัติ
 - หากค่าตั้งที่จำเป็นส่วนอื่นยังไม่ครบ ระบบต้องแจ้งให้ตั้งค่าก่อนใช้งาน ชุดพารามิเตอร์น้ำดิบ 9 รายการเป็นข้อยกเว้นที่ได้รับอนุมัติเป็นค่าเริ่มต้นแล้ว
@@ -72,27 +72,27 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 ### Jar Test transaction model (current draft)
 
 - `jar_tests` เป็นหัวงาน เก็บ Site, `site_raw_unit_id` ที่เป็น mapping ของ Site เดียวกัน, `test_datetime`, สถานะ submit และบีกเกอร์ที่เลือก; ผลคุณภาพน้ำเกิดในวันทดสอบเดียวกันโดยไม่เก็บฟิลด์วัน/เวลาวัดแยกหรือ `operating_status_id`
-- `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping
+- `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping และบังคับกรอกก่อน submit เฉพาะ Turbidity
 - `jar_test_selected_chemicals` เก็บสารที่เลือกหนึ่งรายการต่อ `jar_chemical_type` ระดับงาน ไม่ใช่ระดับรอบหรือระดับสัญญาผู้ขาย
 - ผู้ใช้กรอก stock concentration และหน่วยที่ใช้จริงทุกครั้งใน `jar_test_selected_chemicals`; ทั้งสองค่าต้องมีและค่าความเข้มข้นต้องมากกว่า 0 ไม่มี default concentration จาก `chemicals`
-- `jar_test_rounds` เก็บรอบการทดลองหลายรอบในงานเดียว โดย `round_no` ไม่ซ้ำภายในงาน
-- `jar_test_beakers` เก็บบีกเกอร์ 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร
+- `jar_test_rounds` เก็บรอบการทดลองหลายรอบในงานเดียว โดยงานใหม่เริ่มหนึ่งรอบและ `round_no` ไม่ซ้ำภายในงาน
+- `jar_test_beakers` เก็บ Jar ที่ผู้ใช้เลือกจากหมายเลข 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร; ก่อน submit ต้องกรอกผลครบทุก Jar ที่เลือก
 - `jar_test_mixing_conditions` เก็บลำดับ ชื่อขั้น เวลาและ RPM ของการกวนหรือตกตะกอนแยกตามรอบ
 - `jar_test_chemical_doses` เก็บสารทดลองต่อบีกเกอร์ พร้อม snapshot ที่ใช้คำนวณ C1V1 = C2V2 และต้นทุน
 - `jar_test_results` เก็บผลคุณภาพต่อบีกเกอร์ พร้อม snapshot Bound เมื่อ submit
 - `jar_test_final_chemical_doses` เก็บค่า dose สรุปสุดท้ายต่อสาร ซึ่งอาจต่างจาก dose ของบีกเกอร์ที่เลือก
 
-`site_chemicals` เป็น mapping ว่าสารใดใช้ได้ใน Site; `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญา หนึ่งสารอาจมีหลายสัญญาหรือหลายราคา ข้อมูล Jar Test เก็บ price snapshot ของสัญญาที่เลือก ไม่ใช่ราคาคงที่ใน `site_chemicals`
+`site_chemicals` เป็น mapping ว่าสารใดใช้ได้ใน Site; `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญา หนึ่งสารอาจมีหลายสัญญาหรือหลายราคา Site ต้องเลือก contract ที่จะใช้ก่อนเริ่มงาน และสารแต่ละรายการใช้ contract เดิมตลอดงาน ข้อมูล Jar Test เก็บ contract/price snapshot ไม่ใช่ราคาคงที่ใน `site_chemicals`
 
-### Proposed chemical master model
+### Confirmed chemical master model
 
-ADR-0007 เสนอให้ `chemicals` เป็น Global Master ของตัวสารหรือสูตรผลิตภัณฑ์ โดยไม่เก็บ Organization, Site, Vendor, Contract, ราคา หรือบทบาท Jar Test ในตารางเดียวกัน สารสูตรเดียวกันจากหลาย Vendor ใช้ Master เดียว ส่วนต่างรูปแบบหรือความเข้มข้นที่มีผลต่อการใช้งานให้เป็นคนละ `chemical_id`; `site_chemicals`, `chemical_type_mappings` และ `site_chemical_contracts` ทำหน้าที่กำหนด Site, บทบาท และราคาแยกกัน ข้อเสนอนี้ยังรอการยืนยันและยังไม่ใช่ physical schema ที่อนุมัติ
+ADR-0007 กำหนดให้ `chemicals` เป็น Global Master ข้าม Organization โดยไม่เก็บ Organization, Site, Vendor, Contract, ราคา หรือบทบาท Jar Test ในตารางเดียวกัน สารสูตรเดียวกันจากหลาย Vendor ใช้ Master เดียว ส่วนต่างรูปแบบหรือความเข้มข้นที่มีผลต่อการใช้งานเป็นคนละ `chemical_id` เช่น PACL น้ำ 10% กับ PACL ผง; `site_chemicals`, `chemical_type_mappings` และ `site_chemical_contracts` ทำหน้าที่กำหนด Site, บทบาท และราคาแยกกัน
 
 องค์กรมีแหล่งน้ำหลายประเภท แต่ Jar Test ใช้เฉพาะน้ำดิบ ดังนั้น `water_source` ใน Jar Test หมายถึงรายการจริงจาก `raw_unit` ไม่ใช่แถวประเภทใน `wq_source` และไม่แสดงรายการจากตารางประเภทอื่น
 
 เส้นทางเชิงแนวคิดคือ `Site → Site–Raw Unit mapping → raw_unit → Jar Test เลือกหนึ่งรายการ` โดย `raw_unit` หนึ่งรายการเชื่อมกับหลาย Site ได้แม้ Site อยู่คนละ Organization
 
-การเลือกสารหนึ่งรายการต่อ `jar_chemical_type` ล็อกระดับงานด้วย `UNIQUE (jar_test_id, chemical_type_id)` ใน `jar_test_selected_chemicals` ซึ่งอ้าง `site_chemicals` ที่เปิดใช้ใน Site เดียวกับงานและมีบทบาทที่อนุญาตใน `chemical_type_mappings` รายการทดลองต่อบีกเกอร์และผลสรุปอ้างสารที่เลือกในงานเดียวกัน; สัญญาหลายฉบับของสารเดียวกันไม่ทำให้กลายเป็นสารหลายรายการ และแต่ละ dose เก็บราคาจากสัญญาที่ใช้จริง
+การเลือกสารหนึ่งรายการต่อ `jar_chemical_type` ล็อกระดับงานด้วย `UNIQUE (jar_test_id, chemical_type_id)` ใน `jar_test_selected_chemicals` ซึ่งอ้าง `site_chemicals` ที่เปิดใช้ใน Site เดียวกับงานและมีบทบาทที่อนุญาตใน `chemical_type_mappings` รายการทดลองต่อบีกเกอร์และผลสรุปอ้างสารที่เลือกในงานเดียวกัน; สัญญาหลายฉบับของสารเดียวกันไม่ทำให้กลายเป็นสารหลายรายการ แต่ต้องเลือก contract หนึ่งรายการต่อสารก่อนสร้างงานและใช้ตลอดงาน
 
 ## Invariants
 
@@ -128,7 +128,7 @@ ADR-0007 เสนอให้ `chemicals` เป็น Global Master ของ�
 ## Explicitly deferred
 
 - physical schema และ snapshot representation ของ Jar Test Site Settings
-- รายการพารามิเตอร์ หน่วย Bound สารเคมี สัญญา และราคาจริงที่แต่ละ Site จะใช้
+- รายการเพิ่มเติมจากพารามิเตอร์ตั้งต้น รวมถึงสารเคมี สัญญา หน่วย และราคาจริงที่จะ mapping ให้แต่ละ Site
 - permission และ audit ของผู้แก้ไข Site Settings
 - physical schema ของล็อตสต๊อกและการตัดสต๊อกจริง; ตาราง Jar Test ปัจจุบันเก็บต้นทุนที่ใช้คำนวณเท่านั้น
 - พฤติกรรมของ draft เมื่อ Site ยังไม่มีค่าตั้งครบ
