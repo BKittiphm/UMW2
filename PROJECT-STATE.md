@@ -1,6 +1,6 @@
 # UMW2 Project State
 
-อัปเดตล่าสุด: 25 กันยายน 2569
+อัปเดตล่าสุด: 29 กันยายน 2569
 
 ไฟล์นี้เป็นจุดส่งต่องานข้ามเครื่อง ข้าม session และข้าม AI ต้องปรับเมื่อสถานะหรือข้อตกลงสำคัญเปลี่ยน
 
@@ -55,6 +55,8 @@
 - สร้าง schema draft ใน Notion สำหรับ `role_type` และ `users`; เพิ่ม role scope เบื้องต้น, `password_hash`, ขอบเขต BU/Site และกติกาความสัมพันธ์ของผู้ใช้
 - ตรวจและปิดสถานะ Notion ของ `job_type`, `site_chemical_contracts` และ `jar_tests` เป็น Done พร้อมแก้ตัวอย่างรหัสงานและ FK `users(id)`
 - สร้างหน้า Notion `chemicals` ใน Global Master Data พร้อม Data Dictionary, DDL draft, constraints และตัวอย่างรายการ; ข้อเสนอให้เป็น Global Master ข้าม Organization บันทึกใน ADR-0007 สถานะ Proposed
+- จัดทำทะเบียนระบบอ้างอิงภายนอก โดยกำหนด UMW เดิมเป็น AS-IS baseline และ MAMIs เป็น comparison reference พร้อมขอบเขตทดลอง `สถานีผลิต Head Office` และ `BU ALD / source AAA` ตามลำดับ
+- แยกไฟล์ข้อมูลเข้าสู่ระบบไว้เฉพาะเครื่องใต้ `.codex/local/` ซึ่ง Git ไม่ติดตาม และเพิ่มบันทึกการทดลองที่เปลี่ยนข้อมูลในระบบภายนอก
 
 ## Accepted decisions
 
@@ -107,6 +109,8 @@
 `JarTest/legacy-jar-test-product-functional-spec-th.md`
 
 เอกสารนี้เป็น AS-IS baseline เท่านั้น ไม่ใช่ database schema และไม่ใช่ข้อสรุป UX ของระบบใหม่
+
+ทะเบียน URL บทบาทของระบบ และขอบเขตทดลองอยู่ใน `docs/references/EXTERNAL-SYSTEMS.md`
 
 ## Open product and architecture decisions
 

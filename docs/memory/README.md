@@ -6,6 +6,8 @@
 
 หัวข้อใหม่ที่ได้รับอนุมัติ: [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md)
 
+ขอบเขตล่าสุดของระบบอ้างอิง: [UMW เดิมและ MAMIs](sessions/2026-09-29-external-system-references.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test
@@ -23,6 +25,7 @@
 15. อ่าน [schema Role Type และ Users](sessions/2026-09-25-user-role-schema.md) ก่อนเพิ่ม FK ผู้ใช้หรือออกแบบสิทธิ์
 16. หากต้องการถ้อยคำต้นทาง ตรวจ [ประวัติแชต](transcripts/README.md) และระวังขอบเขตข้อมูลที่ยังขาด
 17. อ่าน [การออกแบบ Chemical Master](sessions/2026-09-29-chemical-master-design.md) ก่อนปรับ `chemicals`, `site_chemicals`, บทบาทสาร หรือสัญญาสารเคมี; แบบร่างนี้ยังรอการยืนยัน scope
+18. อ่าน [ระบบอ้างอิง UMW เดิมและ MAMIs](sessions/2026-09-29-external-system-references.md) ก่อนเข้าเว็บอ้างอิงหรือทำการทดลองที่เปลี่ยนข้อมูล
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 

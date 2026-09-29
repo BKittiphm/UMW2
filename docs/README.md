@@ -20,6 +20,11 @@
 
 - [`../JarTest/legacy-jar-test-product-functional-spec-th.md`](../JarTest/legacy-jar-test-product-functional-spec-th.md) — ข้อกำหนด Jar Test ที่สำรวจจากระบบเดิม
 
+## External system references
+
+- [`references/EXTERNAL-SYSTEMS.md`](references/EXTERNAL-SYSTEMS.md) — URL, บทบาทของ UMW เดิม/MAMIs, ขอบเขตทดสอบ และวิธีเก็บข้อมูลเข้าสู่ระบบแบบ local
+- [`references/EXTERNAL-SYSTEM-EXPLORATION-LOG.md`](references/EXTERNAL-SYSTEM-EXPLORATION-LOG.md) — บันทึกการทดลองที่ทำให้ข้อมูลในระบบอ้างอิงเปลี่ยนแปลง
+
 ## Target architecture (TO-BE)
 
 See also the approved target requirement: [Jar Test Setting ราย Site](../JarTest/jar-test-site-settings-requirements-th.md).
@@ -69,6 +74,8 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 | โครงสร้างโดเมนระบบใหม่ | `docs/architecture/TARGET-DOMAIN-MODEL.md` |
 | เหตุผลของการตัดสินใจสถาปัตยกรรม | `docs/decisions/ADR-*.md` |
 | กติกาการทำงานของ AI | `AGENTS.md` |
+| ระบบภายนอกและขอบเขตการทดลอง | `docs/references/EXTERNAL-SYSTEMS.md` |
+| ประวัติการทดลองในระบบภายนอก | `docs/references/EXTERNAL-SYSTEM-EXPLORATION-LOG.md` |
 | สถานะของงานระหว่างดำเนินการ | `docs/aegis/work/<date>-<task>/20-checkpoint.md` |
 
 ห้ามสร้างเอกสารซ้ำที่เป็นเจ้าของเรื่องเดียวกัน ให้แก้ไฟล์เจ้าของข้อมูลเดิมแทน
