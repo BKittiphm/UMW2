@@ -75,11 +75,12 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping และบังคับกรอกก่อน submit เฉพาะ Turbidity
 - `jar_test_selected_chemicals` เก็บสารที่เลือกหนึ่งรายการต่อ `jar_chemical_type` ระดับงาน ไม่ใช่ระดับรอบหรือระดับสัญญาผู้ขาย
 - ผู้ใช้กรอก stock concentration และหน่วยที่ใช้จริงทุกครั้งใน `jar_test_selected_chemicals`; ทั้งสองค่าต้องมีและค่าความเข้มข้นต้องมากกว่า 0 ไม่มี default concentration จาก `chemicals`
-- `jar_test_rounds` เก็บรอบการทดลองหลายรอบในงานเดียว โดยงานใหม่เริ่มหนึ่งรอบและ `round_no` ไม่ซ้ำภายในงาน
+- `jar_test_rounds` เก็บรอบการทดลองต่อเนื่องในงานเดียว โดยงานใหม่เริ่มหนึ่งรอบและ `round_no` ไม่ซ้ำภายในงาน; ผู้ใช้เพิ่มรอบถัดไปผ่านคำสั่ง “เพิ่มรอบ” เมื่อผลของ Jar ที่เลือกทุกรายการในรอบก่อนหน้าครบตามพารามิเตอร์ผลทดสอบ active ไม่สร้างหลายรอบล่วงหน้า
 - `jar_test_beakers` เก็บ Jar ที่ผู้ใช้เลือกจากหมายเลข 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร; ก่อน submit ต้องกรอกผลครบทุก Jar ที่เลือก
-- `jar_test_mixing_conditions` เก็บลำดับ ชื่อขั้น เวลาและ RPM ของการกวนหรือตกตะกอนแยกตามรอบ
+- `jar_test_mixing_conditions` เก็บค่าที่บันทึกได้ของการกวน/ตกตะกอนแยกตามรอบ ภายใต้ 5 ขั้นมาตรฐานชุดเดียวกันทุก Site และลำดับคงที่: PRE-OXIDATION, COAGULATION, FLOCCULATION S1, FLOCCULATION S2, SEDIMENTATION; ระยะเวลาเก็บเป็นวินาที และค่าระยะเวลา/RPM เว้นว่างได้ (ข้อมูลที่ไม่มีเป็น `NULL` ไม่ใช่ `0`; หน้าจอแสดง “ไม่ได้ระบุ” นอกช่องกรอก). ตามหน้าจออ้างอิง RPM ใช้กับ 4 ขั้นแรกเท่านั้น. ไม่ต้องมีการตั้งค่าหรือ mapping ขั้นราย Site; การแทน stage code ใน physical schema ยังเป็นการออกแบบแยก. ค่าเหล่านี้ไม่ใช้คำนวณ dose หรือ pass/fail
 - `jar_test_chemical_doses` เก็บสารทดลองต่อบีกเกอร์ พร้อม snapshot ที่ใช้คำนวณ C1V1 = C2V2 และต้นทุน
 - `jar_test_results` เก็บผลคุณภาพต่อบีกเกอร์ พร้อม snapshot Bound เมื่อ submit
+- การแนะนำ Jar ที่ดีที่สุดเป็นระดับงาน: เปรียบเทียบเฉพาะ Jar ที่ผ่านเกณฑ์จากทุกรอบ แล้วใช้ต้นทุนสารเคมีรวมต่ำสุด; dose สรุปสุดท้ายยังเก็บแยกจาก dose ของ Jar ที่แนะนำ
 - `jar_test_final_chemical_doses` เก็บค่า dose สรุปสุดท้ายต่อสาร ซึ่งอาจต่างจาก dose ของบีกเกอร์ที่เลือก
 
 `site_chemicals` เป็น mapping ว่าสารใดใช้ได้ใน Site; `site_chemical_contracts` เก็บผู้ขายและราคาตามสัญญา หนึ่งสารอาจมีหลายสัญญาหรือหลายราคา Site ต้องเลือก contract ที่จะใช้ก่อนเริ่มงาน และสารแต่ละรายการใช้ contract เดิมตลอดงาน ข้อมูล Jar Test เก็บ contract/price snapshot ไม่ใช่ราคาคงที่ใน `site_chemicals`
