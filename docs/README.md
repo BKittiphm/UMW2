@@ -41,6 +41,8 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 
 ข้อยืนยันล่าสุดเรื่องพารามิเตอร์ผลทดสอบ Bound ตั้งต้น ฟิลด์บังคับ จำนวน Jar contract และ Chemical Master อยู่ใน [บันทึกวันที่ 29 กันยายน](memory/sessions/2026-09-29-jar-test-implementation-defaults.md)
 
+ผล reverse engineering สูตร dose/ต้นทุนที่ตรวจซ้ำจาก UMW เดิม และคำถามที่ยังเปิดเรื่องคำแนะนำอัตราจ่าย อยู่ใน [บันทึกการทดลองวันที่ 29 กันยายน](memory/sessions/2026-09-29-jar-test-calculation-reverse-engineering.md)
+
 ข้อสรุป schema พื้นฐานของบทบาทและผู้ใช้อยู่ใน [บันทึก Role Type และ Users](memory/sessions/2026-09-25-user-role-schema.md)
 
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่

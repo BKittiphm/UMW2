@@ -19,6 +19,20 @@
 - มี Global Master ที่หลายโมดูลใช้ร่วมกัน
 - เตรียมรองรับหลาย Organization ตั้งแต่โครงสร้างพื้นฐาน แม้ระยะแรกใช้ภายในองค์กรเดียว
 
+## Current active investigation — Legacy Jar Test calculations
+
+- สถานะ: กำลัง reverse engineer จาก UMW เดิม; งานทดลองที่สร้าง/แก้ข้อมูลยังจำกัดที่ `สถานีผลิต Head Office` ส่วน ID `22890` ที่ Site `ระยอง` ถูกเปิดและเลื่อนแท็บตามคำสั่งเฉพาะของเจ้าของโครงการ โดยไม่แก้ค่าฟอร์ม
+- งานทดสอบที่สร้างโดยได้รับคำยืนยัน: ID `22937` และ `22938` วันที่ 29/09/2569 ที่ Head Office; ทั้งสองยังไม่ปิด/ลบ (`22938` ยังไม่มีผลคุณภาพน้ำหรือสรุปผล)
+- ยืนยันซ้ำจาก UI: ปริมาณสารละลาย `dose × 1000 ÷ stock concentration`; ต้นทุนต่อสาร `dose × ราคา/1000`; ต้นทุนรวมคำนวณจากค่าเต็มความละเอียดก่อนแสดง 3 ตำแหน่ง
+- ผล matrix ผ่าน/ไม่ผ่านตรงกับ baseline; ยังหา Bound รายพารามิเตอร์ไม่ได้
+- สูตรคำแนะนำ Pre-chlorine/ด่างทับทิมยังไม่ยืนยัน: งาน `22938` ที่กรอก raw profile ตามภาพตั้งแต่ Create และงาน `22890` ที่ Site ระยองแสดง 0–0 ทั้งคู่; งาน Head Office เดิมอีกงานแสดงค่าไม่เป็นศูนย์
+- ตามคำขอเจ้าของโครงการ เปิดงาน ID `22890` ที่ Site `ระยอง` และกด `ถัดไป` ผ่านข้อมูลหลัก/สารเคมีไปแท็บ dose; UI แจ้งว่าข้อมูลขั้นก่อนหน้าล็อกแก้ไข งานยังไม่ถูกแก้ค่า แต่ workflow ถูกเลื่อนขั้น
+- ID `22890` แสดงสารและราคา คลอรีนแก๊ส 275/0, PACl น้ำ 5,000/5, พอลิเมอร์ประจุลบ 100/57.5; ผลรวมต้นทุนต่อ Jar 0.084/0.109/0.134/0.159/0.184/0.209 ยืนยันสูตรรวม `sum(dose × price ÷ 1000)` ก่อนแสดง 3 ตำแหน่ง
+- แท็บผลของ ID `22890` มี Turbidity, pH, Appearance Color; True Color และ Total Mn ว่างทุก Jar แต่ verdict ผ่าน/ไม่ผ่านยังแสดง. งานยังระบุ `งานที่กำลังทำ`; ไม่กด `กรอกผลทดสอบ` หรือปิด/ส่งงาน
+- งาน `22938` ยืนยันซ้ำปริมาณ `dose × 1000 ÷ stock` กับ stock 275/5,000/100 และ dose ตามภาพ; ราคาที่ UI แสดงเป็น 0 ทั้งสามสาร (แม้ภาพระบุ 0/5/57.5) และแถวต้นทุนว่าง จึงยังไม่ทดสอบต้นทุนจากชุดราคานี้
+- เมื่อเลือกสถานะ `ตามกำลังผลิต` ค่าเวลาเริ่มต้นกวนเปลี่ยนตามสถานะในระบบเดิม; เป็นข้อสังเกต AS-IS เท่านั้น ไม่เปลี่ยนข้อกำหนด TO-BE
+- บันทึกรายละเอียดและหลักฐานไว้ใน [บันทึก reverse engineering](docs/memory/sessions/2026-09-29-jar-test-calculation-reverse-engineering.md) และ [exploration log](docs/references/EXTERNAL-SYSTEM-EXPLORATION-LOG.md)
+
 ## Completed
 
 - จัดทำบันทึกการคุยพร้อมที่มา เหตุผล ข้อเสนอที่ยังไม่อนุมัติ และพื้นที่สำหรับประวัติแชต
@@ -133,6 +147,16 @@
 
 44. ทุก Site ใช้ 5 ขั้นกวนผสม/ตกตะกอนมาตรฐานชุดเดียวกันตามลำดับใน JT-SET-032; ค่าระยะเวลาและ RPM ไม่บังคับกรอก. `0` ที่ยังเป็น placeholder คือค่าว่างและต้องไม่ถูกบันทึกเป็นศูนย์; ค่าที่ไม่มีแสดง “ไม่ได้ระบุ”. เงื่อนไขเหล่านี้เป็นข้อมูลบันทึก ไม่ใช้คำนวณและไม่ขวางการบันทึกผลหรือเพิ่มรอบ. ดู [บันทึกข้อยืนยัน](docs/memory/sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md)
 
+## Additional accepted decisions (2026-10-01)
+
+45. แก้ไข decision 44: เงื่อนไขกวนผสม/ตกตะกอนมี Global default และแต่ละ Site ตั้ง override ได้; FLOCCULATION S3 เป็นขั้นเสริมที่ Site เปิดได้. ค่าที่ resolve สำหรับ Site เติม job form เป็นค่าเริ่มต้น ขณะที่ค่าที่ใช้จริงเก็บตามรอบใน `jar_test_mixing_conditions`; ค่าตัวเลขยังเว้นว่างได้และไม่ใช้คำนวณ dose หรือ pass/fail. Physical schema, merge rules และ lifecycle/snapshot ยังเปิดอยู่. ดู [ข้อยืนยันใหม่](docs/memory/sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
+
+46. รอบ Jar Test ใหม่ต้องคัดลอกเงื่อนไขกวนผสม/ตกตะกอนที่บันทึกจริงจากรอบก่อนหน้า ไม่โหลด Global/Site Setting ใหม่ระหว่างงาน; การแก้ค่าในรอบใหม่ไม่กระทบรอบเดิม. ดู [ข้อยืนยันใหม่](docs/memory/sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
+
+47. ยืนยัน physical schema ของ Mixing Setting: `jar_test_mixing_defaults` เก็บ Global default 6 แถวคงที่ และสร้าง `site_jar_test_mixing_settings` 6 แถวเมื่อสร้าง Site โดยคัดลอกจาก Global; Site แก้ของตนได้โดยไม่รับผลจากการแก้ Global ภายหลัง. ใช้ `UNIQUE(site_id, stage_code)` และ S3 เปิด/ปิดได้ราย Site. ดู [ข้อยืนยันใหม่](docs/memory/sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
+
+48. สิทธิ์ Jar Test: `OPERATOR` ทำ flow ได้ครบถึง submit; `SUPERVISOR`, `MANAGER` และ `DIRECTOR` ดูได้อย่างเดียวทุก Site ภายใต้ Business Unit ของบัญชี; `ADMIN` และ `SUPER_ADMIN` ไม่อยู่ในกลุ่มดูอย่างเดียว. สิทธิ์ของ `SHIFT_LEADER` และ `OUTSOURCE` ยังเปิดอยู่. ดู [บันทึก role Jar Test](docs/memory/sessions/2026-10-01-jar-test-role-access.md)
+
 ## Canonical baseline
 
 พฤติกรรม Jar Test ระบบเดิมอยู่ใน:
@@ -151,7 +175,7 @@
 2. วิธีระบุหน่วยจริงของ `sedimentation_unit` และ `filtration_unit` ที่ชื่อหรือขนาดซ้ำกันในหลาย Site
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
 4. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
-5. permission รายเมนู, role assignment และ mapping ผู้ใช้หลาย Site หลังจากมีรายการฟังก์ชันที่ต้องควบคุมครบ
+5. ทบทวนแบบ User/authorization โดยรวม รวมถึงการผูก role กับบัญชีจริง, scope ของ Operator, role inheritance, permission schema และการรองรับผู้ใช้หลาย Site; JT-SET-035 เก็บเฉพาะพฤติกรรมที่ระบุสำหรับ Jar Test
 6. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
 7. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
 8. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
@@ -168,11 +192,17 @@
 
 ## Immediate next step
 
-รับไฟล์ Excel schema draft มาวิเคราะห์เทียบกับเอกสารปัจจุบัน จากนั้นยืนยัน cardinality และข้อมูลของ mapping สำหรับ unit ภายใน Organization ก่อนลง physical PostgreSQL schema แบบ iterative
+สำหรับงานที่กำลังทำ: สูตรต้นทุนรวมได้รับการยืนยันจาก ID `22890`; ยังไม่ทราบสูตรแนะนำ Pre-chlorine/ด่างทับทิม, Bound จริง/การจัดการค่าผลว่าง และวิธีปัดเศษแถวต้นทุนรายสาร. Summary ของ ID `22890` ยังไม่ได้เปิด เพราะ action `กรอกผลทดสอบ` อาจเปลี่ยนข้อมูล. ต่อไปใช้การอ่านงานที่ได้รับอนุญาตหรือขออนุมัติก่อนการทดสอบที่เปลี่ยนข้อมูล; ห้ามปิด/ลบ ID `22937`, `22938` หรือ `22890`
 
 ## Handoff instructions
 
-ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md), [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md), [กติกา Bound และ lifecycle ของ Jar Test](docs/memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md), [ราคาเคมีและ Transaction ของ Jar Test](docs/memory/sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md), [Jar Test หลายรอบ/สภาวะกวน](docs/memory/sessions/2026-09-25-jar-test-multi-round-and-mixing.md), [การเลือกสารระดับงาน](docs/memory/sessions/2026-09-25-jar-test-chemical-selection.md), [พารามิเตอร์น้ำดิบตั้งต้น](docs/memory/sessions/2026-09-25-jar-test-raw-water-defaults.md), [schema Role Type และ Users](docs/memory/sessions/2026-09-25-user-role-schema.md) และ [ค่าเริ่มต้น/ความครบถ้วนของ Jar Test](docs/memory/sessions/2026-09-29-jar-test-implementation-defaults.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+ความจำประกอบล่าสุด: [Project Memory](docs/memory/README.md), [บันทึก reverse engineering สูตรคำนวณ Jar Test](docs/memory/sessions/2026-09-29-jar-test-calculation-reverse-engineering.md), [บันทึกเริ่มต้น](docs/memory/sessions/2026-09-08-project-foundation.md), [คำชี้แจงโครงสร้างแหล่งน้ำ](docs/memory/sessions/2026-09-09-water-quality-source-structure.md), [การเลือก PostgreSQL](docs/memory/sessions/2026-09-12-postgresql-decision.md), [แนวทาง schema แบบ iterative](docs/memory/sessions/2026-09-14-schema-draft-and-iterative-design.md), [ขอบเขต unit และ Site mapping](docs/memory/sessions/2026-09-15-unit-scope-and-site-mapping.md), [การเพิ่ม organization_id ใน unit เฉพาะ Organization](docs/memory/sessions/2026-09-21-organization-scoped-unit-ddl.md), [การปรับ Site–Raw Unit mapping](docs/memory/sessions/2026-09-21-site-raw-unit-mapping.md), [กติกา Bound และ lifecycle ของ Jar Test](docs/memory/sessions/2026-09-24-jar-test-bound-rules-and-lifecycle.md), [ราคาเคมีและ Transaction ของ Jar Test](docs/memory/sessions/2026-09-25-chemical-contracts-and-jar-test-transactions.md), [Jar Test หลายรอบ/สภาวะกวน](docs/memory/sessions/2026-09-25-jar-test-multi-round-and-mixing.md), [การเลือกสารระดับงาน](docs/memory/sessions/2026-09-25-jar-test-chemical-selection.md), [พารามิเตอร์น้ำดิบตั้งต้น](docs/memory/sessions/2026-09-25-jar-test-raw-water-defaults.md), [schema Role Type และ Users](docs/memory/sessions/2026-09-25-user-role-schema.md) และ [ค่าเริ่มต้น/ความครบถ้วนของ Jar Test](docs/memory/sessions/2026-09-29-jar-test-implementation-defaults.md) ประวัติแชตฉบับเต็มยังไม่ถูกนำเข้า
+
+ข้อยืนยันการหา Jar ที่ดีที่สุดข้ามทุกรอบ: [การเปรียบเทียบ Jar ที่ผ่านข้ามรอบ](docs/memory/sessions/2026-09-30-jar-test-selection-across-rounds.md)
+
+ข้อยืนยันการเพิ่มรอบตามลำดับ: [การเพิ่มรอบทดลองแบบต่อเนื่อง](docs/memory/sessions/2026-09-30-jar-test-sequential-round-creation.md)
+
+ข้อยืนยันขั้นกวนผสม/ตกตะกอนและค่าว่าง: [ขั้นมาตรฐานและข้อมูลสภาวะที่ไม่บังคับกรอก](docs/memory/sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md)
 
 อ่าน [Jar Test Setting รายสถานี](docs/memory/sessions/2026-09-23-jar-test-site-settings.md) และ [ข้อกำหนด TO-BE](JarTest/jar-test-site-settings-requirements-th.md) ก่อนออกแบบ schema หรือ workflow ที่เกี่ยวข้อง
 

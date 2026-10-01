@@ -10,6 +10,16 @@
 
 ข้อยืนยัน Jar Test ล่าสุด: [ค่าเริ่มต้น ความครบถ้วน Contract และ Chemical Master](sessions/2026-09-29-jar-test-implementation-defaults.md)
 
+ข้อยืนยันการสรุป Jar Test ข้ามรอบ: [การเปรียบเทียบ Jar ที่ผ่านข้ามรอบ](sessions/2026-09-30-jar-test-selection-across-rounds.md)
+
+ข้อยืนยันการเพิ่มรอบ: [การเพิ่มรอบทดลองแบบต่อเนื่อง](sessions/2026-09-30-jar-test-sequential-round-creation.md)
+
+ข้อยืนยันขั้นกวนผสมและค่าที่ไม่บังคับกรอก: [ขั้นมาตรฐานและข้อมูลสภาวะที่ไม่บังคับกรอก](sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md)
+
+ข้อยืนยันล่าสุดเรื่องค่าเริ่มต้น Global/Site และ FLOCCULATION S3: [ค่าตั้งเงื่อนไขกวนผสม Global และราย Site](sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
+
+ผล reverse engineering ล่าสุดของ UMW เดิม: [สูตรคำนวณ Jar Test — ผลทดสอบสองงาน](sessions/2026-09-29-jar-test-calculation-reverse-engineering.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test
@@ -29,6 +39,10 @@
 17. อ่าน [การออกแบบ Chemical Master](sessions/2026-09-29-chemical-master-design.md) ก่อนปรับ `chemicals`, `site_chemicals`, บทบาทสาร หรือสัญญาสารเคมี
 18. อ่าน [ระบบอ้างอิง UMW เดิมและ MAMIs](sessions/2026-09-29-external-system-references.md) ก่อนเข้าเว็บอ้างอิงหรือทำการทดลองที่เปลี่ยนข้อมูล
 19. อ่าน [ค่าเริ่มต้นและความครบถ้วนของ Jar Test](sessions/2026-09-29-jar-test-implementation-defaults.md) ก่อนออกแบบ validation, จำนวนรอบ/Jar, contract หรือหน้ากรอกผล
+20. อ่าน [ผล reverse engineering สูตรคำนวณ Jar Test เดิม](sessions/2026-09-29-jar-test-calculation-reverse-engineering.md) เมื่อตรวจสูตรหรือทดลองต่อกับ UMW เดิม
+21. อ่าน [การเปรียบเทียบ Jar ที่ผ่านข้ามรอบ](sessions/2026-09-30-jar-test-selection-across-rounds.md) เมื่อตรวจ logic การแนะนำ Jar ที่ดีที่สุดของงาน
+22. อ่าน [การเพิ่มรอบทดลองแบบต่อเนื่อง](sessions/2026-09-30-jar-test-sequential-round-creation.md) เมื่อตรวจ flow การสร้างรอบหรือ UI ของงาน Jar Test
+23. อ่าน [ขั้นมาตรฐานและข้อมูลสภาวะที่ไม่บังคับกรอก](sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md) เมื่อตรวจ UI หรือข้อมูลเงื่อนไขการกวนผสม/ตกตะกอน
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 
@@ -59,4 +73,6 @@
 
 ล็อกอิน browser, cookies, credentials และเครื่องมือที่ติดตั้งไม่อยู่ในความจำนี้
 
-ข้อยืนยันล่าสุดเรื่องเงื่อนไขการกวนผสม Jar Test: [ขั้นมาตรฐาน 5 ขั้นและค่าว่างที่ไม่บังคับกรอก](sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md)
+ข้อยืนยันล่าสุดเรื่องเงื่อนไขการกวนผสม Jar Test: [ค่าเริ่มต้น Global/Site, FLOCCULATION S3 และค่าว่างที่ไม่บังคับกรอก](sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
+
+ข้อยืนยันล่าสุดเรื่องสิทธิ์ Jar Test: [Operator ทำงานครบ และบทบาทระดับ Supervisor ดูข้าม Site ใน BU](sessions/2026-10-01-jar-test-role-access.md)

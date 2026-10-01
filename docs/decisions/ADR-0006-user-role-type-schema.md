@@ -19,7 +19,7 @@
 5. `organization_id`, `business_unit_id` และ `site_id` อนุญาต NULL ตามระดับบัญชี; ผู้ใช้ระดับ Organization ใช้ `organization_id` ได้โดยไม่ต้องผูก BU/Site และถ้ามี Site ต้องอยู่ใน BU/Organization เดียวกัน
 6. ใช้ชื่อ `password_hash` แทน `password`; ระบบต้อง hash และไม่ส่งค่ารหัสผ่านจริงกลับใน API
 7. หากผู้ใช้ต้องรับผิดชอบหลาย Site ให้เพิ่ม `user_sites` เป็น mapping แยก โดย `site_id` ใน `users` ทำหน้าที่เป็น Site หลัก/ค่าเริ่มต้นในระยะนี้
-8. Permission รายเมนูและ mapping `role_type` กับ permission จะออกแบบใน `permissions`/`role_permissions` หลังรายการฟังก์ชันได้รับการยืนยัน
+8. Permission รายเมนูและ mapping `role_type` กับ permission จะออกแบบภายหลัง หลังยืนยันรายการฟังก์ชันและแบบ User/authorization โดยรวม
 
 ร่างนี้กำหนด `employee_code` ให้ไม่ซ้ำระดับระบบเพื่อให้ค้นหาและอ้างอิงได้ง่าย หากข้อมูลจริงอนุญาตรหัสซ้ำข้าม Organization ให้เปลี่ยนเป็น unique ตาม Organization/Business Unit ตอนทำ physical schema
 
@@ -27,7 +27,7 @@
 
 - ตาราง Jar Test และ audit สามารถอ้าง `users(id)` เป็นชื่อเดียวกันได้
 - ขอบเขตระดับ BU/Site ถูกอธิบายไว้ตั้งแต่ต้น แต่ยังไม่บังคับ policy authorization ทั้งระบบ
-- การรองรับหลาย Site ต่อผู้ใช้และ permission แบบละเอียดจะเพิ่มตารางในระยะถัดไป
+- การรองรับหลาย Site ต่อผู้ใช้และ permission แบบละเอียดจะตัดสินใจหลังทบทวนแบบ User/authorization โดยรวม
 - Schema ใน Notion เป็น draft สำหรับออกแบบโดเมน ยังไม่ใช่ physical DDL ที่อนุมัติเรื่อง provider, password policy, RLS หรือ migration
 
 ## Alternatives considered

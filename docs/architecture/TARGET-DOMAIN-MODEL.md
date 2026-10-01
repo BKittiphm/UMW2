@@ -16,7 +16,7 @@
 - `users` เก็บรหัสพนักงาน เบอร์โทร Organization/BU/Site บทบาท ชื่อเข้าใช้ และ `password_hash`; ไม่เก็บ plaintext password
 - `organization_id`, `business_unit_id` และ `site_id` ของ `users` เป็น nullable เพื่อรองรับบัญชีระดับระบบ/Organization; ถ้ามี Site ต้องอยู่ใต้ BU/Organization เดียวกัน และถ้ามี BU ต้องอยู่ใน Organization เดียวกัน
 - ในระยะแรก `site_id` ใช้เป็น Site หลัก/ค่าเริ่มต้นของผู้ใช้ หากผู้ใช้ต้องรับผิดชอบหลาย Site ให้เพิ่ม `user_sites` เป็น mapping แยก
-- permission รายเมนูและ mapping บทบาทกับ permission จะออกแบบเป็น `permissions`/`role_permissions` ในระยะถัดไป หลังรายการฟังก์ชันได้รับการยืนยัน
+- ข้อกำหนดการใช้งาน Jar Test ตามบทบาทอยู่ใน JT-SET-035; การผูกบทบาทกับบัญชีจริง, scope ของ Operator และการออกแบบ permission/authorization ทั้งระบบจะทบทวนพร้อมแบบ User ในระยะถัดไป
 - รายละเอียดนี้เป็น schema draft เพื่อให้ตาราง Jar Test อ้าง `users(id)` และยังไม่ใช่การอนุมัติ physical DDL, authentication provider หรือ policy ด้าน password ทั้งระบบ
 
 ## Purpose
@@ -75,9 +75,9 @@ Site  ─── mapping ─── filtration_unit    (same Organization only)
 - `jar_test_raw_water_results` เก็บค่าน้ำดิบของงานและอ้าง `site_jar_test_raw_properties` ของ Site เดียวกับงานโดยตรง หน้ากรอกโหลด 9 ค่าเริ่มต้นและรายการ active ที่ Admin เพิ่ม; ผลหนึ่งงานไม่ซ้ำต่อ mapping และบังคับกรอกก่อน submit เฉพาะ Turbidity
 - `jar_test_selected_chemicals` เก็บสารที่เลือกหนึ่งรายการต่อ `jar_chemical_type` ระดับงาน ไม่ใช่ระดับรอบหรือระดับสัญญาผู้ขาย
 - ผู้ใช้กรอก stock concentration และหน่วยที่ใช้จริงทุกครั้งใน `jar_test_selected_chemicals`; ทั้งสองค่าต้องมีและค่าความเข้มข้นต้องมากกว่า 0 ไม่มี default concentration จาก `chemicals`
-- `jar_test_rounds` เก็บรอบการทดลองต่อเนื่องในงานเดียว โดยงานใหม่เริ่มหนึ่งรอบและ `round_no` ไม่ซ้ำภายในงาน; ผู้ใช้เพิ่มรอบถัดไปผ่านคำสั่ง “เพิ่มรอบ” เมื่อผลของ Jar ที่เลือกทุกรายการในรอบก่อนหน้าครบตามพารามิเตอร์ผลทดสอบ active ไม่สร้างหลายรอบล่วงหน้า
+- `jar_test_rounds` เก็บรอบการทดลองต่อเนื่องในงานเดียว โดยงานใหม่เริ่มหนึ่งรอบและ `round_no` ไม่ซ้ำภายในงาน; ผู้ใช้เพิ่มรอบถัดไปผ่านคำสั่ง “เพิ่มรอบ” เมื่อผลของ Jar ที่เลือกทุกรายการในรอบก่อนหน้าครบตามพารามิเตอร์ผลทดสอบ active ไม่สร้างหลายรอบล่วงหน้า. รอบใหม่คัดลอกเงื่อนไขจริงจากรอบก่อนหน้า ไม่โหลดค่า Site Setting ใหม่กลางงาน
 - `jar_test_beakers` เก็บ Jar ที่ผู้ใช้เลือกจากหมายเลข 1–6 แยกตามรอบ และต้นทุนรวมที่คำนวณจากรายการหยอดสาร; ก่อน submit ต้องกรอกผลครบทุก Jar ที่เลือก
-- `jar_test_mixing_conditions` เก็บค่าที่บันทึกได้ของการกวน/ตกตะกอนแยกตามรอบ ภายใต้ 5 ขั้นมาตรฐานชุดเดียวกันทุก Site และลำดับคงที่: PRE-OXIDATION, COAGULATION, FLOCCULATION S1, FLOCCULATION S2, SEDIMENTATION; ระยะเวลาเก็บเป็นวินาที และค่าระยะเวลา/RPM เว้นว่างได้ (ข้อมูลที่ไม่มีเป็น `NULL` ไม่ใช่ `0`; หน้าจอแสดง “ไม่ได้ระบุ” นอกช่องกรอก). ตามหน้าจออ้างอิง RPM ใช้กับ 4 ขั้นแรกเท่านั้น. ไม่ต้องมีการตั้งค่าหรือ mapping ขั้นราย Site; การแทน stage code ใน physical schema ยังเป็นการออกแบบแยก. ค่าเหล่านี้ไม่ใช้คำนวณ dose หรือ pass/fail
+- `jar_test_mixing_defaults` เก็บ Global default 6 แถวคงที่ และเมื่อสร้าง Site ระบบคัดลอกเป็น `site_jar_test_mixing_settings` 6 แถว (`UNIQUE(site_id, stage_code)`). Stage code ที่ fix คือ PRE_OXIDATION, COAGULATION, FLOCCULATION_S1, FLOCCULATION_S2, FLOCCULATION_S3 และ SEDIMENTATION; ใช้ `display_order` 10, 20, 30, 40, 50, 60 เพื่อวาง S3 ระหว่าง S2 กับ SEDIMENTATION. 5 ขั้นมาตรฐานเปิดเสมอ ส่วน S3 เปิดได้ราย Site; การแก้ Global ภายหลังไม่แก้ค่า Site ที่มีแล้ว. ค่า Site ใช้เป็นค่าเริ่มต้นในฟอร์มสร้างงาน Jar Test; `jar_test_mixing_conditions` เก็บค่าที่ใช้จริงแยกตามรอบ. ระยะเวลาเก็บเป็นวินาที และค่าระยะเวลา/RPM เว้นว่างได้ (ข้อมูลที่ไม่มีเป็น `NULL` ไม่ใช่ `0`; หน้าจอแสดง “ไม่ได้ระบุ” นอกช่องกรอก). RPM ใช้กับขั้นกวน ไม่ใช้กับ SEDIMENTATION. ค่าเหล่านี้ไม่ใช้คำนวณ dose หรือ pass/fail
 - `jar_test_chemical_doses` เก็บสารทดลองต่อบีกเกอร์ พร้อม snapshot ที่ใช้คำนวณ C1V1 = C2V2 และต้นทุน
 - `jar_test_results` เก็บผลคุณภาพต่อบีกเกอร์ พร้อม snapshot Bound เมื่อ submit
 - การแนะนำ Jar ที่ดีที่สุดเป็นระดับงาน: เปรียบเทียบเฉพาะ Jar ที่ผ่านเกณฑ์จากทุกรอบ แล้วใช้ต้นทุนสารเคมีรวมต่ำสุด; dose สรุปสุดท้ายยังเก็บแยกจาก dose ของ Jar ที่แนะนำ

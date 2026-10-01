@@ -1,7 +1,7 @@
 # ADR-0003: Site-scoped Jar Test Settings
 
-- Status: Accepted; amended 2026-09-29
-- Date: 2026-09-23; amended 2026-09-25 and 2026-09-29
+- Status: Accepted; amended 2026-09-29 and 2026-10-01
+- Date: 2026-09-23; amended 2026-09-25, 2026-09-29, and 2026-10-01
 - Scope: Product and domain behavior for Jar Test in UMW2
 
 ## Context
@@ -17,7 +17,7 @@
 3. Site Setting มีผลกับ raw_unit ทุกแหล่งที่ mapping กับ Site นั้น; water_source ของงานยังเลือกได้เฉพาะ raw_unit ที่ mapping กับ Site
 4. งานแต่ละครั้งเก็บสำเนาค่าตั้งที่ใช้ เพื่อรักษาความถูกต้องของข้อมูลย้อนหลังเมื่อมีการเปลี่ยน Setting
 5. หาก Site ยังไม่มีค่าตั้งที่จำเป็นนอกเหนือจากพารามิเตอร์น้ำดิบ 9 ค่าเริ่มต้น ระบบต้องแจ้งให้ตั้งค่าก่อนใช้งาน และห้ามยืมค่าตั้งของ Site อื่นหรือใช้ค่าอื่นจาก MAMIS โดยปริยาย
-6. เงื่อนไขการกวนและตกตะกอนบันทึกเป็นข้อมูลของการทดลองแต่ละครั้ง ไม่อยู่ใน Site Setting และไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่านตามขอบเขตที่อนุมัติ
+6. เงื่อนไขการกวนและตกตะกอนมี Global default และ override ราย Site เพื่อเติมเป็นค่าเริ่มต้นใน Job Form; ค่าที่ใช้จริงบันทึกแยกตามรอบตาม [ADR-0004](ADR-0004-jar-test-rounds-and-mixing-conditions.md). ข้อสรุปเดิมที่ว่าไม่อยู่ใน Site Setting ถูก supersede เมื่อ 2026-10-01. เงื่อนไขนี้ไม่ใช้คำนวณปริมาณสารหรือผลผ่าน/ไม่ผ่าน
 7. ข้อกำหนดนี้เป็น TO-BE เพิ่มเติม; legacy Jar Test baseline คงเดิม
 8. เกณฑ์ผลทดสอบมีหนึ่งชุดต่อ Site, Parameter และ Parameter Type; เมื่อเปลี่ยนเกณฑ์ให้แก้รายการเดิมโดยไม่มี effective date หรือประวัติเวอร์ชันในตารางเกณฑ์
 9. Bound เปรียบเทียบแบบ inclusive; `lower_bound` ที่เป็น `NULL` ใช้ค่า 0, `upper_bound` ที่เป็น `NULL` หมายถึงไม่มีเพดานบน, ห้าม Bound ว่างทั้งคู่ และห้ามค่าติดลบ
@@ -49,9 +49,9 @@
 
 ยังไม่เลือกในขอบเขตปัจจุบัน Site Setting หนึ่งชุดใช้กับ raw_unit ที่ mapping กับ Site ทั้งหมด; source-specific override ต้องมีข้อกำหนดและการอนุมัติเพิ่มเติม
 
-### ใส่เงื่อนไขกวนผสมไว้ใน Site Setting หรือสูตรคำนวณ
+### การตั้งค่าเงื่อนไขกวนผสมและตกตะกอน
 
-ไม่เลือกในขอบเขตที่อนุมัติ เงื่อนไขดังกล่าวเป็นข้อมูลสภาวะทดลองรายงานและไม่เปลี่ยน dose หรือ pass/fail
+แก้ไขตามข้อยืนยันวันที่ 1 ตุลาคม 2569: ให้มี Global default และ Site override เพื่อเป็นค่าเริ่มต้นใน job form; Site ที่ต้องการ FLOCCULATION S3 เปิดขั้นนี้ได้. ค่าที่ใช้จริงยังบันทึกแยกตามรอบใน `jar_test_mixing_conditions` และไม่เปลี่ยน dose หรือ pass/fail. รายละเอียดดู [ADR-0004](ADR-0004-jar-test-rounds-and-mixing-conditions.md).
 
 ## Open follow-up decisions
 
@@ -60,4 +60,4 @@
 3. Physical schema และวิธี snapshot ของ Site Setting
 4. Role, permission และ audit ของการแก้ค่าตั้ง
 5. พฤติกรรม draft เมื่อยังตั้งค่าไม่ครบ
-6. โครงสร้างข้อมูลเงื่อนไขการกวนและตกตะกอนรายรอบตัดสินแล้วใน [ADR-0004](ADR-0004-jar-test-rounds-and-mixing-conditions.md)
+6. Physical schema ของ Global/Site mixing settings, วิธีรวมค่า, S3, snapshot และการแก้ค่าใน Job Form ยังออกแบบแยกตาม [ADR-0004](ADR-0004-jar-test-rounds-and-mixing-conditions.md)
