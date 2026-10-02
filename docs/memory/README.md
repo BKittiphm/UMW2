@@ -22,6 +22,10 @@
 
 ผลอ่าน Summary tab แบบ read-only ของงาน UMW `22890`: [Summary แสดง dose ที่ตรงกับ Jar ผ่านต้นทุนต่ำสุด](sessions/2026-10-02-jar-test-summary-tab-read.md)
 
+ข้อยืนยันล่าสุดเรื่องผล Jar แบบกรอกบางรายการ, การเลือก Jar, และ final dose manual: [การประเมินผลและต้นทุนสรุป](sessions/2026-10-02-jar-test-evaluation-and-manual-final-dose.md)
+
+ข้อยืนยันล่าสุดเรื่องทศนิยม: [Global precision setting](sessions/2026-10-02-global-display-precision-settings.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test

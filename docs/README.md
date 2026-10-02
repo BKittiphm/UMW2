@@ -56,6 +56,7 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 - [ADR-0005: Jar Test chemical selection per job](decisions/ADR-0005-jar-test-chemical-selection-per-job.md)
 - [ADR-0006: User and role type schema baseline](decisions/ADR-0006-user-role-type-schema.md)
 - [ADR-0007: Global Chemical Master และการแยกสูตรผลิตภัณฑ์](decisions/ADR-0007-global-chemical-master.md)
+- [ADR-0008: Global display precision settings](decisions/ADR-0008-global-display-precision-settings.md)
 
 - [`decisions/ADR-0001-organization-business-unit-site-water-source.md`](decisions/ADR-0001-organization-business-unit-site-water-source.md) — Organization, Business Unit, Site และ Water Source
 - [`decisions/ADR-0002-postgresql-as-primary-database.md`](decisions/ADR-0002-postgresql-as-primary-database.md) — PostgreSQL เป็นฐานข้อมูลหลักของ UMW2

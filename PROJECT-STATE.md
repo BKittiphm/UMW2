@@ -72,7 +72,7 @@
 - จัดทำทะเบียนระบบอ้างอิงภายนอก โดยกำหนด UMW เดิมเป็น AS-IS baseline และ MAMIs เป็น comparison reference พร้อมขอบเขตทดลอง `สถานีผลิต Head Office` และ `BU ALD / source AAA` ตามลำดับ
 - แยกไฟล์ข้อมูลเข้าสู่ระบบไว้เฉพาะเครื่องใต้ `.codex/local/` ซึ่ง Git ไม่ติดตาม และเพิ่มบันทึกการทดลองที่เปลี่ยนข้อมูลในระบบภายนอก
 - ยืนยันพารามิเตอร์น้ำดิบและผลทดสอบตั้งต้น 9 รายการต่อ Site โดยใช้ Dissolved manganese แทน Soluble Manganese; Bound ตั้งต้น lower 0/upper ไม่กำหนด และค่าน้ำดิบบังคับกรอกเฉพาะ Turbidity
-- ยืนยันให้งานใหม่เริ่มหนึ่งรอบ เลือกจำนวน Jar จากหมายเลข 1–6 ได้ และต้องกรอกผลครบทุก Jar ที่เลือกก่อน submit
+- ยืนยันให้งานใหม่เริ่มหนึ่งรอบ เลือกจำนวน Jar จากหมายเลข 1–6 ได้; decision 50 แทนที่รายละเอียดความครบถ้วนของผลแล้ว
 - ยืนยันให้สารแต่ละรายการใช้ contract ที่ Site ตั้งไว้หนึ่งรายการตลอดงาน หากต้องการราคาอื่นต้องเปลี่ยน Setting ก่อนสร้างงานใหม่
 
 ## Accepted decisions
@@ -124,10 +124,10 @@
 32. Site ใหม่ใช้พารามิเตอร์น้ำดิบและผลทดสอบตั้งต้นชุดเดียวกัน 9 รายการ โดยใช้ Dissolved manganese แทน Soluble Manganese
 33. Bound ตั้งต้นของพารามิเตอร์ผลทดสอบเป็น lower 0 และ upper ไม่กำหนด; ผู้ดูแลแก้ค่าใน Site Setting ได้
 34. ค่าน้ำดิบที่บังคับกรอกก่อน submit มีเฉพาะ Turbidity
-35. งาน Jar Test ใหม่เริ่มหนึ่งรอบ ผู้ใช้เพิ่มรอบได้ และแต่ละรอบเลือกจำนวน Jar จากหมายเลข 1–6; ต้องกรอกผลครบทุก Jar ที่เลือกก่อน submit
+35. งาน Jar Test ใหม่เริ่มหนึ่งรอบ ผู้ใช้เพิ่มรอบได้ และแต่ละรอบเลือกจำนวน Jar จากหมายเลข 1–6; รายละเอียดความครบถ้วนของผลถูกแทนที่ด้วย decision 50
 36. สารแต่ละรายการในงานใช้ contract เดียวที่ Site ตั้งไว้ตลอดทุก round/beaker และเก็บ contract/price snapshot; หากต้องการราคาอื่นต้องเปลี่ยน Setting ก่อนสร้างงาน
 37. `chemicals` เป็น Global Master ข้าม Organization และสารที่ต่างรูปแบบ/สูตรจนมีผลต่อการใช้งาน เช่น PACL น้ำ 10% กับ PACL ผง เป็นคนละ `chemical_id`
-38. สารเคมีในงานเลือกได้เฉพาะรายการที่ Site mapping/เปิดใช้ไว้ สูตรแนะนำสารเคมีอัตโนมัติยังเลื่อนออกไปจนกว่าจะทราบสูตร
+38. สารเคมีในงานเลือกได้เฉพาะรายการที่ Site mapping/เปิดใช้ไว้; ขอบเขตสูตรแนะนำถูกแทนที่ด้วย decision 49
 39. UMW2 ปรับ UX ของ Jar Test จาก legacy ได้ทันที โดยต้องรักษากฎข้อมูล การคำนวณ และ lifecycle ที่อนุมัติ
 40. ข้อมูล mapping จริงของ Site จะจัดทำภายหลังเมื่อโครงสร้างและข้อมูลต้นทางได้รับการตรวจสอบแล้ว
 
@@ -141,7 +141,7 @@
 
 ## Additional accepted decisions (2026-09-30, continued)
 
-43. เพิ่มรอบถัดไปได้เมื่อผลคุณภาพของ Jar ทุกใบที่เลือกในรอบก่อนหน้าครบตามพารามิเตอร์ผลทดสอบที่ active; Jar ที่ไม่ได้เลือกไม่นับในการตรวจ
+43. เพิ่มรอบถัดไปได้เมื่อผลคุณภาพของ Jar ทุกใบที่เลือกในรอบก่อนหน้าพร้อมประเมิน; รายละเอียดถูกแทนที่ด้วย decision 50
 
 ## Additional accepted decisions (2026-09-30, continued)
 
@@ -156,6 +156,14 @@
 47. ยืนยัน physical schema ของ Mixing Setting: `jar_test_mixing_defaults` เก็บ Global default 6 แถวคงที่ และสร้าง `site_jar_test_mixing_settings` 6 แถวเมื่อสร้าง Site โดยคัดลอกจาก Global; Site แก้ของตนได้โดยไม่รับผลจากการแก้ Global ภายหลัง. ใช้ `UNIQUE(site_id, stage_code)` และ S3 เปิด/ปิดได้ราย Site. ดู [ข้อยืนยันใหม่](docs/memory/sessions/2026-10-01-jar-test-mixing-global-site-defaults.md)
 
 48. สิทธิ์ Jar Test: `OPERATOR` ทำ flow ได้ครบถึง submit; `SUPERVISOR`, `MANAGER` และ `DIRECTOR` ดูได้อย่างเดียวทุก Site ภายใต้ Business Unit ของบัญชี; `ADMIN` และ `SUPER_ADMIN` ไม่อยู่ในกลุ่มดูอย่างเดียว. สิทธิ์ของ `SHIFT_LEADER` และ `OUTSOURCE` ยังเปิดอยู่. ดู [บันทึก role Jar Test](docs/memory/sessions/2026-10-01-jar-test-role-access.md)
+
+## Additional accepted decisions (2026-10-02)
+
+49. UMW2 ไม่รวมสูตรแนะนำ Pre-chlorine หรือด่างทับทิม; ผู้ดูแลต้องเพิ่มและตั้งค่าข้อมูล Master/Site ที่จำเป็นผ่าน UI ได้
+50. Jar ที่เลือกไม่ต้องกรอกทุกพารามิเตอร์ผลทดสอบ active: ต้องมีผลที่กรอกอย่างน้อยหนึ่งรายการจึงประเมินได้ และจะผ่านเมื่อผลทุกค่าที่กรอกผ่าน Bound. Jar ที่ไม่มีผลกรอกยังไม่พร้อมประเมิน
+51. การเลือก Jar ที่ดีที่สุดใช้ต้นทุนรวมต่ำสุดก่อน; หากเท่ากัน ให้เลือกปริมาตรสารละลายรวมจริงน้อยกว่า แล้วเลือกรอบที่เก่ากว่าและหมายเลข Jar น้อยกว่า
+52. ผู้ใช้แก้ final dose แบบ manual ได้เมื่อมี Jar ผ่านอย่างน้อยหนึ่งใบ: ช่วงตรวจของแต่ละสารคือ dose ต่ำสุด–สูงสุดจาก Jar ที่ผ่านทุก round. ทุกสารอยู่ในช่วงเป็น `WITHIN_TESTED_RANGE`; นอกช่วงให้เตือนและบันทึกได้เมื่อยืนยันเป็น `OUTSIDE_TESTED_RANGE_CONFIRMED`. ค่า manual ไม่ใช่ผลคุณภาพน้ำใหม่ แต่ระบบต้องคำนวณต้นทุนสรุปใหม่จาก dose ที่เลือกกับ price snapshot ของงาน และเก็บแยกจากต้นทุน Jar ที่ทดลอง/แนะนำ
+53. `display_precision_settings` เป็น Global Master สำหรับจำนวนทศนิยม/วิธีปัดเศษของการแสดงผลและ Export: หา setting ตามรายการย่อย → ค่าเริ่มต้นโมดูล → `ALL.DEFAULT`; คำนวณและเก็บข้อมูลเต็มความละเอียดเสมอ. Jar Test ตั้งต้น dose, stock concentration, ผลคุณภาพน้ำ และต้นทุนต่อ ลบ.ม. 3 ตำแหน่ง; ml และยอดเงินรวม 2 ตำแหน่ง; ปัดแบบ `HALF_UP`
 
 ## Canonical baseline
 
@@ -176,11 +184,11 @@
 3. ชื่อ `potable_tranfer_unit` จะคงตามแบบข้อมูลหรือแก้เป็น `potable_transfer_unit`
 4. รายการ Global Master ขั้นต่ำที่ Jar Test ต้องใช้ร่วมกับโมดูลในอนาคต
 5. ทบทวนแบบ User/authorization โดยรวม รวมถึงการผูก role กับบัญชีจริง, scope ของ Operator, role inheritance, permission schema และการรองรับผู้ใช้หลาย Site; JT-SET-035 เก็บเฉพาะพฤติกรรมที่ระบุสำหรับ Jar Test
-6. สูตรแนะนำ Pre-chlorine และด่างทับทิมที่ระบบเดิมใช้
-7. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
-8. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
-9. การยืนยัน seed mapping จริงของ `site_raw_units`
-10. รวมรายการ `jar_chemical_type` ที่ซ้ำใน Notion และยืนยันชื่อ physical table canonical ระหว่าง `jar_chemical_type`, `jar_chemical_types` และ `chemical_types`
+6. Backend framework, ORM/query layer, PostgreSQL hosting และ deployment target
+7. Physical database schema, tenant isolation, audit/history และ migration strategy โดยจะพัฒนาแบบ iterative ตามโมดูล
+8. การยืนยัน seed mapping จริงของ `site_raw_units`
+9. รวมรายการ `jar_chemical_type` ที่ซ้ำใน Notion และยืนยันชื่อ physical table canonical ระหว่าง `jar_chemical_type`, `jar_chemical_types` และ `chemical_types`
+10. ขอบเขต Team membership กับสิทธิ์การมองเห็นหลาย BU/Site
 
 รายละเอียดช่องว่างของระบบเดิมดูหัวข้อ 22 ใน legacy specification
 
@@ -192,7 +200,7 @@
 
 ## Immediate next step
 
-สำหรับงานที่กำลังทำ: สูตรต้นทุนรวมได้รับการยืนยันจาก ID `22890`. อ่าน Summary tab แบบ read-only แล้ว พบ dose 3/25/0.15 PPM และต้นทุน 0.134 บาท/ลบ.ม. ซึ่งตรงกับ Jar 3 และเป็นต้นทุนต่ำสุดใน Jar ที่ผ่าน; ยังพิสูจน์ไม่ได้ว่าเลือกให้อัตโนมัติหรือผู้ใช้เลือก/กรอกไว้ก่อน. ยังไม่ทราบสูตรแนะนำ Pre-chlorine/ด่างทับทิม, Bound จริง/การจัดการค่าผลว่าง และกติกาปัดเศษแถวต้นทุนรายสาร. ห้ามกด action เลือก Jar/กรอก summary/เสร็จงานใน ID `22890` (Site ระยอง); หากจำเป็นต้องทดลองการเปลี่ยนข้อมูลให้ใช้ `สถานีผลิต Head Office` ตามขอบเขตสำรวจ. ห้ามปิด/ลบ ID `22937`, `22938` หรือ `22890`
+สำหรับงานที่กำลังทำ: สูตรต้นทุนรวมได้รับการยืนยันจาก ID `22890`. Summary แสดง dose 3/25/0.15 PPM และต้นทุน 0.134 บาท/ลบ.ม. ซึ่งตรงกับ Jar 3 และเป็นต้นทุนต่ำสุดใน Jar ที่ผ่าน; เจ้าของโครงการยืนยันว่าระบบเลือกผลสรุปจาก Jar ที่ผ่านและมีต้นทุนต่ำสุดโดยอัตโนมัติ. UMW2 ตัดสูตรแนะนำ Pre-chlorine/ด่างทับทิมออกแล้ว, อนุญาตผล Jar แบบกรอกบางพารามิเตอร์ตาม decision 50, ล็อกช่วง manual dose ตาม decision 52 และมี Global precision setting ตาม decision 53. งานถัดไปคือออกแบบ Team model หรือเริ่มออกแบบรายงาน/Export CSV. ห้ามกด action เลือก Jar/กรอก summary/เสร็จงานใน ID `22890` (Site ระยอง); หากจำเป็นต้องทดลองการเปลี่ยนข้อมูลให้ใช้ `สถานีผลิต Head Office` ตามขอบเขตสำรวจ. ห้ามปิด/ลบ ID `22937`, `22938` หรือ `22890`
 
 ## Handoff instructions
 

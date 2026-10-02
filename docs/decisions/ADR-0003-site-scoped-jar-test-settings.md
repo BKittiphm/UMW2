@@ -1,7 +1,7 @@
 # ADR-0003: Site-scoped Jar Test Settings
 
-- Status: Accepted; amended 2026-09-29 and 2026-10-01
-- Date: 2026-09-23; amended 2026-09-25, 2026-09-29, and 2026-10-01
+- Status: Accepted; amended 2026-09-29, 2026-10-01 and 2026-10-02
+- Date: 2026-09-23; amended 2026-09-25, 2026-09-29, 2026-10-01 and 2026-10-02
 - Scope: Product and domain behavior for Jar Test in UMW2
 
 ## Context
@@ -28,7 +28,7 @@
 14. `jar_test_raw_water_results` อ้าง mapping ของ Site โดยตรง ระบบแสดงเฉพาะรายการ active ของ Site และกันผลซ้ำด้วยงานกับ mapping
 15. Site ใหม่มีพารามิเตอร์ผลทดสอบตั้งต้นชุดเดียวกับ 9 พารามิเตอร์น้ำดิบ โดยใช้ Dissolved manganese แทน Soluble Manganese; Bound ตั้งต้นเป็น lower 0 และ upper `NULL`
 16. ค่าน้ำดิบที่บังคับกรอกก่อน submit มีเฉพาะ Turbidity รายการอื่นในชุด active กรอกได้แต่ไม่บังคับ
-17. สารเคมีที่ใช้เลือกได้เฉพาะรายการที่ Site mapping ไว้ สูตรแนะนำสารเคมีอัตโนมัติยังเลื่อนออกไปจนกว่าจะทราบและอนุมัติสูตร
+17. สารเคมีที่ใช้เลือกได้เฉพาะรายการที่ Site mapping ไว้; UMW2 ไม่รวมสูตรแนะนำ Pre-chlorine หรือด่างทับทิม
 18. UMW2 สามารถปรับ UX จาก legacy ได้ทันที โดยต้องรักษากฎข้อมูล การคำนวณ และ lifecycle ที่อนุมัติ
 
 ## Consequences
