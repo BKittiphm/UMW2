@@ -43,6 +43,8 @@ See also the approved target requirement: [Jar Test Setting ราย Site](../J
 
 ผล reverse engineering สูตร dose/ต้นทุนที่ตรวจซ้ำจาก UMW เดิม และคำถามที่ยังเปิดเรื่องคำแนะนำอัตราจ่าย อยู่ใน [บันทึกการทดลองวันที่ 29 กันยายน](memory/sessions/2026-09-29-jar-test-calculation-reverse-engineering.md)
 
+ผลอ่าน Summary tab แบบ read-only ของงาน `22890` และข้อจำกัดที่ยังพิสูจน์ไม่ได้ อยู่ใน [บันทึกวันที่ 2 ตุลาคม](memory/sessions/2026-10-02-jar-test-summary-tab-read.md)
+
 ข้อสรุป schema พื้นฐานของบทบาทและผู้ใช้อยู่ใน [บันทึก Role Type และ Users](memory/sessions/2026-09-25-user-role-schema.md)
 
 - [`architecture/TARGET-DOMAIN-MODEL.md`](architecture/TARGET-DOMAIN-MODEL.md) — โครงสร้างโดเมนเป้าหมายที่ตกลงแล้วและขอบเขตที่ยังเปิดอยู่

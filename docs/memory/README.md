@@ -20,6 +20,8 @@
 
 ผล reverse engineering ล่าสุดของ UMW เดิม: [สูตรคำนวณ Jar Test — ผลทดสอบสองงาน](sessions/2026-09-29-jar-test-calculation-reverse-engineering.md)
 
+ผลอ่าน Summary tab แบบ read-only ของงาน UMW `22890`: [Summary แสดง dose ที่ตรงกับ Jar ผ่านต้นทุนต่ำสุด](sessions/2026-10-02-jar-test-summary-tab-read.md)
+
 1. อ่าน [PROJECT-STATE.md](../../PROJECT-STATE.md) เพื่อทราบสถานะจริงและงานถัดไป
 2. อ่าน [บันทึกการคุยเริ่มต้น](sessions/2026-09-08-project-foundation.md) เพื่อทราบเหตุผลและที่มาของข้อตกลง
 3. อ่าน [คำชี้แจงโครงสร้างแหล่งน้ำ](sessions/2026-09-09-water-quality-source-structure.md) ซึ่งแทนที่ความเข้าใจเดิมเรื่อง Water Source ใน Jar Test
@@ -43,6 +45,8 @@
 21. อ่าน [การเปรียบเทียบ Jar ที่ผ่านข้ามรอบ](sessions/2026-09-30-jar-test-selection-across-rounds.md) เมื่อตรวจ logic การแนะนำ Jar ที่ดีที่สุดของงาน
 22. อ่าน [การเพิ่มรอบทดลองแบบต่อเนื่อง](sessions/2026-09-30-jar-test-sequential-round-creation.md) เมื่อตรวจ flow การสร้างรอบหรือ UI ของงาน Jar Test
 23. อ่าน [ขั้นมาตรฐานและข้อมูลสภาวะที่ไม่บังคับกรอก](sessions/2026-09-30-jar-test-mixing-condition-fixed-steps.md) เมื่อตรวจ UI หรือข้อมูลเงื่อนไขการกวนผสม/ตกตะกอน
+24. อ่าน [สิทธิ์ Jar Test](sessions/2026-10-01-jar-test-role-access.md) เมื่อทบทวน requirement ของโมดูล โดยการผูกกับแบบ User/authorization ยังเปิดอยู่
+25. อ่าน [Summary tab งาน 22890](sessions/2026-10-02-jar-test-summary-tab-read.md) เมื่อตรวจการเลือก Jar ที่ดีที่สุดหรือ summary ของงานระบบเดิม
 
 ## วิธีบันทึกเมื่อจบช่วงงาน
 
